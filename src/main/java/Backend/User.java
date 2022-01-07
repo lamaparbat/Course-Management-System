@@ -13,14 +13,15 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 public class User {
-
-    //major attr
-    private int id, phn;
-    private String name, address, email, query, cur_date;
-    private Connection con;
-    private Statement st;
-    private ResultSet rs;
-    private LocalDate today;
+    //require attr
+    protected int id;
+    protected String name, address, email, query, cur_date,phn;
+    
+    //db config
+    protected Connection con;
+    protected Statement st;
+    protected ResultSet rs;
+    protected LocalDate today;
 
 
     //default Constructor
@@ -31,6 +32,15 @@ public class User {
        //get current date
        today = LocalDate.now( ZoneId.of( "Asia/Katmandu")) ;
        cur_date = today.toString();
+    }
+    
+    //parameterized constructor
+    public User(int id, String name, String email, String phone, String date){
+        this.id = id;
+        this.name =  name;
+        this.email =  email;
+        this.phn = phone;
+        this.cur_date = date;
     }
 
     //admin login
@@ -87,14 +97,18 @@ public class User {
     }
     
     //create new user
-    public boolean createAccount(String username, String email, String password, String phone, String mode) throws SQLException{
+    public boolean createAccount(int mid, String username, String email, String password, String phone, String mode) throws SQLException{
         if(isUserExist(email, mode)){
             //popup error message
             JOptionPane.showMessageDialog(null, "User already exists !!",null,JOptionPane.ERROR_MESSAGE);
             return false;
         }else{
             //insert new user data to database
-            query = "INSERT INTO "+mode+"(username, email, password, phone, date) VALUES('"+username+"','"+email+"','"+password+"','"+phone+"','"+cur_date+"')";
+            if(mode == "Instructor"){
+                query = "INSERT INTO "+mode+"(username, email, password, phone, date, module_id) VALUES('"+username+"','"+email+"','"+password+"','"+phone+"','"+cur_date+"','"+mid+"')";
+            }else{
+                query = "INSERT INTO "+mode+"(username, email, password, phone, date) VALUES('"+username+"','"+email+"','"+password+"','"+phone+"','"+cur_date+"')";
+            }
             if(st.executeUpdate(query) > 0){
                 //pop success message
                 JOptionPane.showMessageDialog(null, "User created successfully !!",null,JOptionPane.INFORMATION_MESSAGE);
@@ -105,6 +119,7 @@ public class User {
             }
         }
     }
+   
     
     //logout
     public boolean logout(){

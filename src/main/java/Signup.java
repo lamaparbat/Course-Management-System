@@ -1,10 +1,14 @@
 import Backend.User;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class Signup extends javax.swing.JFrame {
+    private int mid;
+    
     public Signup() {
         initComponents();
     }
@@ -91,6 +95,15 @@ public class Signup extends javax.swing.JFrame {
         mode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select User Mode", "Student", "Admin", "Instructor" }));
 
         mode_icon.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/mode.png")); // NOI18N
+        
+        //add listener
+        mode.addItemListener(new ItemListener(){
+            public void itemStateChanged(ItemEvent ev){
+                if(ev.getItem() == "Instructor"){
+                    new ModuleID().setVisible(true);
+                }
+            }
+        });
 
         create1.setText("Login");
         create1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -243,9 +256,20 @@ public class Signup extends javax.swing.JFrame {
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>                        
+    }  
     
-    private void createMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {                                     
+    public void setModuleID(int id){
+        this.mid = id;
+        System.out.println(mid);
+    }
+    
+    //create_btn clicked
+    private void createMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {  
+        
+        
+         System.out.println(mid);
+         
+         
         //store the input value         
         String username_val = username.getText();
         String email_val = email.getText();
@@ -256,7 +280,7 @@ public class Signup extends javax.swing.JFrame {
         //check if any field is empty
         if(username_val.length() > 0 && email_val.length() > 0 && password_val.length() > 0 && phone_val.length() > 0 && mode_val.length() > 0 && mode_val != "Select User Mode"){
             //pass above data to backend
-            boolean result = new User().createAccount(username_val,email_val,password_val,phone_val,mode_val);
+            boolean result = new User().createAccount(mid,username_val,email_val,password_val,phone_val,mode_val);
             
             //show the user creation status
             if(result){
@@ -283,6 +307,7 @@ public class Signup extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+             
                 new Signup().setVisible(true);
             }
         });
