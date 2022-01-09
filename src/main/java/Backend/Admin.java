@@ -1,15 +1,11 @@
 package Backend;
 
-import Backend.Course_Backend;
-import Backend.User;
-import java.awt.List;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
+import javax.swing.JOptionPane;
 
 public class Admin extends User {
 
@@ -24,47 +20,84 @@ public class Admin extends User {
         //get the current date
         today = LocalDate.now(ZoneId.of("Asia/Kathmandu"));
         cur_date = today.toString();
+
     }
 
     //add course
-    public boolean addCourse(String cname, String[] modules, int seats, String batch) throws SQLException, ClassNotFoundException {
-        int cid;
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < 3; i++) {
-            if (i == 2) {
-                sb.append(modules[i]);
-            } else {
-                sb.append(modules[i] + ",");
-            }
-        }
-        //convert string buffer into string
-        String module_list = sb.toString();
-
-        //insert data into
-        query = "INSERT INTO Course(cname, seats, batch, modules) VALUES('" + cname + "', '" + seats + "', '" + batch + "', '" + module_list + "')";
-
+    public boolean addCourse(String cname, int seats, String batch, ArrayList<Module> year1, ArrayList<Module> year2, ArrayList<Module> year3) throws SQLException, ClassNotFoundException {
+        //insertion into course table
+        query = "INSERT INTO Course(cname, seats, batch, total_years) VALUES('" + cname + "', '" + seats + "','" + batch + "', '" + years + "')";
         if (st.executeUpdate(query) > 0) {
-            // get the course id and insert the modules in modules table
-            query = "SELECT * FROM Course WHERE cname='" + cname + "'";
+            //fetching recently created course id
+            query = "SELECT * FROM Course WHERE cname= '" + cname + "'";
             rs = st.executeQuery(query);
-
             while (rs.next()) {
-                cid = rs.getInt("cid");
-
-                //insert 
-                for (String i : modules) {
-                    query = "INSERT INTO module(name,instructor,date,cid) VALUES('" + i + "','NULL', '" + cur_date + "', '" + cid + "')";
-                    if (st.executeUpdate(query) > 0) {
-                        System.out.println("Each module is separately stored in database successfully !!");
-                    } else {
-                        System.out.println("failed to insert the modules separatley!!");
-                    }
-                }
+                id = rs.getInt("cid");
             }
-            return true;
-        } else {
-            return false;
+
+            //insertion into module table in yearly wise module
+            try {
+                //checking if the input tutors are valid or not
+                for (Module i : year1) {
+                    String arr[] = i.tutors.split(",");
+                    for (String j : arr) {
+                        if (new Instructor().isTutorExist(j) == false) {
+                            JOptionPane.showMessageDialog(null, j + " tutor not found!!", "Please enter registered teacher", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    //clearing arr
+                    Arrays.fill(arr, null);
+                }
+
+                for (Module i : year2) {
+                    String arr[] = i.tutors.split(",");
+                    for (String j : arr) {
+                        if (new Instructor().isTutorExist(j) == false) {
+                            JOptionPane.showMessageDialog(null, j + " tutor not found!!", "Please enter registered teacher", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    //clearing arr
+                    Arrays.fill(arr, null);
+                }
+
+                for (Module i : year3) {
+                    String arr[] = i.tutors.split(",");
+                    for (String j : arr) {
+                        if (new Instructor().isTutorExist(j) == false) {
+                            JOptionPane.showMessageDialog(null, j + " tutor not found!!", "Please enter registered teacher", JOptionPane.ERROR_MESSAGE);
+                            return false;
+                        }
+                    }
+                    //clearing arr
+                    Arrays.fill(arr, null);
+                }
+
+                // then insert the modules data
+                for (Module i : year1) {
+                    query = "INSERT INTO module(name, instructor, date, course_year, cid) VALUES('" + i.name + "','" + i.tutors + "', '" + cur_date + "','" + i.years + "', '" + id + "')";
+                    st.executeUpdate(query);
+                }
+
+                for (Module j : year2) {
+                    System.out.println(j.name);
+                    query = "INSERT INTO module(name, instructor, date, course_year, cid) VALUES('" + j.name + "','" + j.tutors + "', '" + cur_date + "','" + j.years + "', '" + id + "')";
+                    st.executeUpdate(query);
+                }
+
+                for (Module k : year3) {
+                    System.out.println(k.name);
+                    query = "INSERT INTO module(name, instructor, date, course_year, cid) VALUES('" + k.name + "','" + k.tutors + "', '" + cur_date + "','" + k.years + "', '" + id + "')";
+                    st.executeUpdate(query);
+                }
+
+            } catch (SQLException err) {
+                System.out.println("module insertion failed !!" + err);
+                return false;
+            }
         }
+        return true;
     }
 
     //delete course
@@ -73,15 +106,20 @@ public class Admin extends User {
     }
 
     //view course
-    protected ArrayList viewCourse(ArrayList<Course_Backend> courses) {
+    public ArrayList viewCourse(ArrayList<Course_Backend> courses) {
         return courses;
     }
 
     //update course
-    protected boolean updateCourse(int course_id, String cname, String[] instructor, String[] modules, int seats, int batch) {
-
-        return false;
+    public boolean updateCourse(int course_id, String cname, String batch, int seats) throws SQLException {
+        query = "UPDATE Course SET cname='" + cname + "', batch='" + batch + "' , seats='" + seats + "' WHERE cid='" + course_id + "'";
+        if (st.executeUpdate(query) > 0) {
+            System.out.println("COurse Updated succesfully !!");
+            return true;
+        } else {
+            System.out.println("Failed to update !!");
+            return false;
+        }
     }
-
 
 }

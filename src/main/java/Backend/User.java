@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 public class User {
+    protected int id,years = 3;
     //require attr
-    protected int id;
     protected String name, address, email, query, cur_date,phn;
     
     //db config
@@ -35,8 +35,7 @@ public class User {
     }
     
     //parameterized constructor
-    public User(int id, String name, String email, String phone, String date){
-        this.id = id;
+    public User( String name, String email, String phone, String date){
         this.name =  name;
         this.email =  email;
         this.phn = phone;
@@ -85,6 +84,11 @@ public class User {
 
     }
     
+    //get current date
+    public String getDate(){
+        return this.cur_date;
+    }
+    
     //check if the user already exist or not
     private boolean isUserExist(String email, String mode) throws SQLException{
         query = "SELECT * FROM "+mode+" WHERE email='"+email+"'";
@@ -97,15 +101,15 @@ public class User {
     }
     
     //create new user
-    public boolean createAccount(int mid, String username, String email, String password, String phone, String mode) throws SQLException{
+    public boolean createAccount(String username, String email, String password, String phone, String mode, String selected_course_name) throws SQLException{
         if(isUserExist(email, mode)){
             //popup error message
             JOptionPane.showMessageDialog(null, "User already exists !!",null,JOptionPane.ERROR_MESSAGE);
             return false;
         }else{
             //insert new user data to database
-            if(mode == "Instructor"){
-                query = "INSERT INTO "+mode+"(username, email, password, phone, date, module_id) VALUES('"+username+"','"+email+"','"+password+"','"+phone+"','"+cur_date+"','"+mid+"')";
+            if(mode == "Student"){
+                query = "INSERT INTO "+mode+"(username, email, password, phone, date, course) VALUES('"+username+"','"+email+"','"+password+"','"+phone+"','"+cur_date+"', '"+selected_course_name+"')";
             }else{
                 query = "INSERT INTO "+mode+"(username, email, password, phone, date) VALUES('"+username+"','"+email+"','"+password+"','"+phone+"','"+cur_date+"')";
             }

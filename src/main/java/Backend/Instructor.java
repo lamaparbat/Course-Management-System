@@ -6,8 +6,13 @@ import java.util.ArrayList;
 
 public class Instructor extends User {
 
+    //tutor name list
+    ArrayList<Instructor> tutor_list = new ArrayList<Instructor>();
+    ArrayList<String> tutor_name_list = new ArrayList<>();
+
     //default constructor
-    public Instructor() {
+    public Instructor() throws SQLException, ClassNotFoundException {
+        setTutorNameList();
     }
 
     //parameterized constructor
@@ -20,27 +25,28 @@ public class Instructor extends User {
     }
 
     //reutrn tutor id
-    public int getInstructorId(User obj) {
+    public int getInstructorId(Instructor obj) {
+        id = obj.id;
         return obj.id;
     }
 
     //reutrn email
-    public String getEmail(User obj) {
+    public String getEmail(Instructor obj) {
         return obj.email;
     }
 
     //return tutor name
-    public String getInstructorName(User obj) {
+    public String getInstructorName(Instructor obj) {
         return obj.name;
     }
 
     //return phone no
-    public String getPhone(User obj) {
+    public String getPhone(Instructor obj) {
         return obj.phn;
     }
 
     //return date
-    public String getDate(User obj) {
+    public String getDate(Instructor obj) {
         return obj.cur_date;
     }
 
@@ -51,11 +57,9 @@ public class Instructor extends User {
         //database query
         return details;
     }
-
-    //get all tutors list object
-    public ArrayList<Instructor> getTutorsList() throws ClassNotFoundException, SQLException {
-        ArrayList<Instructor> tutor_list = new ArrayList<Instructor>();
-
+    
+    //set the setTutorNameList
+    protected void setTutorNameList() throws SQLException, ClassNotFoundException{
         //db connection
         Connection con = new DB_Connection().connect();
 
@@ -68,8 +72,23 @@ public class Instructor extends User {
         //iterate the each object value
         while (rs.next()) {
             tutor_list.add(new Instructor(rs.getInt("iid"), rs.getString("username"), rs.getString("email"), rs.getString("phone"), rs.getString("date")));
+            tutor_name_list.add(rs.getString("username"));
         }
+       
+    }
 
+    //is tutor exist ?
+    public boolean isTutorExist(String tutor) throws SQLException {        
+        return tutor_name_list.contains(tutor);
+    }
+
+    //get all tutor name in list
+    private ArrayList<String> getTutorNameList() throws SQLException, ClassNotFoundException {
+        return tutor_name_list;
+    }
+
+    //get all tutors list object
+    public ArrayList<Instructor> getTutorsList() throws ClassNotFoundException, SQLException {
         return tutor_list;
     }
 
@@ -87,11 +106,24 @@ public class Instructor extends User {
         //check if insert success or not
         if (st.executeUpdate(query) > 0) {
             System.out.println("Course added successfully!");
-            
+
             return true;
         } else {
             System.out.println("Course failed to add!");
             return false;
         }
     }
+    
+    //edit tutors
+    public boolean editTutor(int id, String name, String email, String phone) throws SQLException{
+        query = "UPDATE Instructor SET username='"+name+"', email='"+email+"', phone='"+phone+"' WHERE iid='"+id+"'";
+        if(st.executeUpdate(query) > 0){
+            System.out.println("Tutor updated successfully!!");
+            return true;
+        }else{
+            System.out.println("Tutor failed to update!!");
+            return false;
+        }
+    }
+
 }

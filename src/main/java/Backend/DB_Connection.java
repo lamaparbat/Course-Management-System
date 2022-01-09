@@ -6,7 +6,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DB_Connection {
-
+    //required attr
+    Connection con;
+    
+    public DB_Connection() throws ClassNotFoundException, SQLException{
+        connect();
+    }
+    
     Connection connect() throws ClassNotFoundException, SQLException {
         //mysql connection
         Class.forName("com.mysql.jdbc.Driver");
@@ -17,5 +23,9 @@ public class DB_Connection {
         }else{
             return con;
         }
+    }
+    
+    public void close() throws SQLException{
+      con.close();
     }
 }

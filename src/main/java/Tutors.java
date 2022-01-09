@@ -1,4 +1,5 @@
 
+import Backend.DB_Connection;
 import Backend.Instructor;
 import Backend.User;
 import java.awt.Component;
@@ -108,7 +109,7 @@ public class Tutors extends javax.swing.JFrame {
         search_inp = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         sidebar.setBackground(new java.awt.Color(102, 102, 102));
         sidebar.setForeground(new java.awt.Color(255, 255, 255));
@@ -513,14 +514,14 @@ public class Tutors extends javax.swing.JFrame {
                 return canEdit[columnIndex];
             }
         });
-        
-         //increase table header size
+
+        //increase table header size
         JTableHeader th = activity_table.getTableHeader();
         th.setFont(new Font("Dialog", Font.BOLD, 14));
-        
+
         //increase the table row height
         activity_table.setRowHeight(activity_table.getRowHeight() + 20);
-        
+
         //increase table rows font size
         activity_table.setFont(new Font("Serif", Font.PLAIN, 14));
 
@@ -541,7 +542,7 @@ public class Tutors extends javax.swing.JFrame {
         activity_table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         activity_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         activity_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-        
+
         jScrollPane1.setViewportView(activity_table);
 
         dashboard_title.setFont(new java.awt.Font("Menlo", 0, 20)); // NOI18N
@@ -814,7 +815,13 @@ public class Tutors extends javax.swing.JFrame {
         add_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         add_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                add_btnMouseClicked(evt);
+                try {
+                    add_btnMouseClicked(evt);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -978,17 +985,17 @@ public class Tutors extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) {
+    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
         // Open the tutor form
-        new Tutor_Form().setVisible(true);
+        new Signup().setVisible(true);
     }
 
     private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        new Edit_Tutor().setVisible(true);
     }
 
     private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+
     }
 
     private void search_inpKeyReleased(java.awt.event.KeyEvent evt) {

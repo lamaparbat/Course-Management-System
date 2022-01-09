@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import java.awt.Desktop;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.io.IOException;
 import java.net.URI;
@@ -23,11 +22,11 @@ public class Course extends javax.swing.JFrame {
 
     public Course() throws SQLException, ClassNotFoundException {
         initComponents();
-        activity_table.getColumnModel().getColumn(0).setPreferredWidth(27);
-        activity_table.getColumnModel().getColumn(1).setPreferredWidth(120);
-        activity_table.getColumnModel().getColumn(2).setPreferredWidth(100);
+        activity_table.getColumnModel().getColumn(0).setPreferredWidth(30);
+        activity_table.getColumnModel().getColumn(1).setPreferredWidth(200);
+        activity_table.getColumnModel().getColumn(2).setPreferredWidth(90);
         activity_table.getColumnModel().getColumn(3).setPreferredWidth(90);
-        activity_table.getColumnModel().getColumn(4).setPreferredWidth(90);
+        activity_table.getColumnModel().getColumn(4).setPreferredWidth(40);
         showCourses();
     }
 
@@ -107,7 +106,7 @@ public class Course extends javax.swing.JFrame {
         search_inp = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         sidebar.setBackground(new java.awt.Color(102, 102, 102));
         sidebar.setForeground(new java.awt.Color(255, 255, 255));
@@ -493,11 +492,11 @@ public class Course extends javax.swing.JFrame {
         activity_table.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "ID", "Course Name", "Seats", "Batch", "Modules"
+                    "ID", "Course Name", "Seats", "Batch", "No. of Yeaers"
                 }
         ) {
             Class[] types = new Class[]{
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean[]{
                 true, true, false, false, false, false
@@ -525,7 +524,11 @@ public class Course extends javax.swing.JFrame {
         //set the table rows and cols width
         activity_table.setAutoResizeMode(activity_table.AUTO_RESIZE_OFF);
 
-        activity_table.getColumnModel().getColumn(4).setMinWidth(350);
+        activity_table.getColumnModel().getColumn(0).setMinWidth(25);
+        activity_table.getColumnModel().getColumn(1).setMinWidth(100);
+        activity_table.getColumnModel().getColumn(2).setMinWidth(30);
+        activity_table.getColumnModel().getColumn(3).setMinWidth(50);
+        activity_table.getColumnModel().getColumn(4).setMinWidth(400);
 
         //center the rows values
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -977,7 +980,7 @@ public class Course extends javax.swing.JFrame {
     }
 
     private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        new Edit_Course().setVisible(true);
     }
 
     private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) {

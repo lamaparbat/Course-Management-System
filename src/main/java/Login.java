@@ -1,6 +1,5 @@
 
 import Backend.User;
-import java.awt.Cursor;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +42,7 @@ public class Login extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -90,7 +89,13 @@ public class Login extends javax.swing.JFrame {
         createAccountLink.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         createAccountLink.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                createAccountLinkMouseClicked(evt);
+                try {
+                    createAccountLinkMouseClicked(evt);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -183,7 +188,7 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>                        
 
     //redirect to create account panel
-    private void createAccountLinkMouseClicked(java.awt.event.MouseEvent evt) {
+    private void createAccountLinkMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
         //dispose current panel
         this.dispose();
         //popup signup panel
