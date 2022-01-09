@@ -1,25 +1,44 @@
+
+import Backend.Admin;
+import Backend.Course_Backend;
+import Backend.Instructor;
+import Backend.Student;
 import Backend.User;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
-import static java.awt.SystemColor.desktop;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Window;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
-public class Home extends javax.swing.JFrame{
+public final class Home extends javax.swing.JFrame {
 
-    public Home() {
+    public Home() throws ClassNotFoundException, SQLException {
         initComponents();
+        activity_table.getColumnModel().getColumn(0).setPreferredWidth(30);
+        activity_table.getColumnModel().getColumn(1).setPreferredWidth(700);
+        activity_table.setBounds(0, 0, 600, 30);
+        //center the rows values
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        activity_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        //fill the table rows
+        addActivityTableRows();
     }
 
-    private void initComponents() {
+    private void initComponents() throws ClassNotFoundException, SQLException {
 
         jPanel8 = new javax.swing.JPanel();
         jPanel18 = new javax.swing.JPanel();
@@ -339,8 +358,7 @@ public class Home extends javax.swing.JFrame{
 
         logout_btn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         logout_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        
-        
+
         //navigator onclick event handling
         dashboard_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -353,7 +371,7 @@ public class Home extends javax.swing.JFrame{
                 }
             }
         });
-        
+
         course_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
@@ -365,7 +383,7 @@ public class Home extends javax.swing.JFrame{
                 }
             }
         });
-        
+
         tutor_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
@@ -377,7 +395,7 @@ public class Home extends javax.swing.JFrame{
                 }
             }
         });
-        
+
         calendar_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
@@ -389,7 +407,7 @@ public class Home extends javax.swing.JFrame{
                 }
             }
         });
-        
+
         mail_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
@@ -405,7 +423,7 @@ public class Home extends javax.swing.JFrame{
                 }
             }
         });
-        
+
         setting_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
@@ -417,8 +435,7 @@ public class Home extends javax.swing.JFrame{
                 }
             }
         });
-       
-        
+
         logout_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
@@ -581,17 +598,30 @@ public class Home extends javax.swing.JFrame{
 
         jScrollPane1.setBackground(new java.awt.Color(204, 204, 204));
 
+        //increase table header size
+        JTableHeader th = activity_table.getTableHeader();
+        th.setFont(new Font("Dialog", Font.BOLD, 14));
+        
+        activity_table.setBackground(new java.awt.Color(29, 90, 250 ));
+        activity_table.setForeground(new Color(250, 250, 250));
+
+        //increase table header height
+        JTableHeader header = activity_table.getTableHeader();
+        header.setPreferredSize(new Dimension(35, 35));
+
+        //increase the table row height
+        activity_table.setRowHeight(activity_table.getRowHeight() + 15);
+
+        //increase table rows font size
+        activity_table.setFont(new Font("Serif", Font.PLAIN, 14));
+
         activity_table.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null}
-                },
+                new Object[][]{},
                 new String[]{
-                    "ID", "Activity Name", "Description", "Date"
+                    "ID", "Activity Name"
                 }
         ));
+
         jScrollPane1.setViewportView(activity_table);
 
         jLabel24.setFont(new java.awt.Font("Menlo", 0, 20)); // NOI18N
@@ -603,7 +633,7 @@ public class Home extends javax.swing.JFrame{
         jLabel20.setText("Total Courses");
 
         jLabel23.setFont(new java.awt.Font("Monospaced", 0, 50)); // NOI18N
-        jLabel23.setText("57");
+        jLabel23.setText(String.valueOf(new Course_Backend().getTotalCoursesCount()) + "  ");
 
         jButton3.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/folder.png")); // NOI18N
         jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -643,7 +673,7 @@ public class Home extends javax.swing.JFrame{
         jLabel21.setText("Total Teachers");
 
         jLabel26.setFont(new java.awt.Font("Monospaced", 0, 50)); // NOI18N
-        jLabel26.setText("100");
+        jLabel26.setText(String.valueOf(" " + new Instructor().getTotalTutorsCount()) + "  ");
 
         jButton4.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/folder.png")); // NOI18N
         jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -681,7 +711,7 @@ public class Home extends javax.swing.JFrame{
         jLabel22.setText("Total Students");
 
         jLabel25.setFont(new java.awt.Font("Monospaced", 0, 50)); // NOI18N
-        jLabel25.setText("4000");
+        jLabel25.setText(" " + String.valueOf(new Student().getTotalStudentsCount()) + "   ");
 
         jButton10.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/folder.png")); // NOI18N
         jButton10.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1090,58 +1120,58 @@ public class Home extends javax.swing.JFrame{
         pack();
         setLocationRelativeTo(null);
     }
-    
+
     //dashboard navigate
     private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
         Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
         win.dispose();
         new Home().setVisible(true);
     }
-    
+
     //courses navigate
     private void courses_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
         String user = "Admin";
-        if(user != "Student"){
+        if (user != "Student") {
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();
             new Course().setVisible(true);
         }
     }
-    
+
     //tutors function
     private void tutors_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
         String user = "Admin";
-        if(user != "Student"){
+        if (user != "Student") {
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();
             new Tutors().setVisible(true);
         }
     }
-    
+
     //logout function
     private void calendar_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
         String user = "Admin";
-        if(user != "Student"){
+        if (user != "Student") {
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
 //            win.dispose();
 //            new Calendar().setVisible(true);
         }
     }
-    
+
     //calendar navigate
     private void mail_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, URISyntaxException, IOException {
         String user = "Admin";
-        if(user != "Student"){
+        if (user != "Student") {
             // open browser and link to mail
             desktop = Desktop.getDesktop();
             desktop.browse(new URI("https://gmail.com/"));
         }
     }
-        
+
     //setting navigate
     private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
         String user = "Admin";
-        if(user != "Student"){
+        if (user != "Student") {
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();
 //            new Setting().setVisible(true);
@@ -1157,12 +1187,31 @@ public class Home extends javax.swing.JFrame{
             new Login().setVisible(true);
         }
     }
-    
+
+    //activity table update
+    void addActivityTableRows() throws ClassNotFoundException, SQLException {
+        DefaultTableModel model = (DefaultTableModel) activity_table.getModel();
+
+        ArrayList<String> activity_log = new Admin().getActivityList();
+        //add the row value
+        Object[] row = new Object[2];
+        for (int i = 0; i < activity_log.size(); i++) {
+            row[0] = i + 1;
+            row[1] = "  "+activity_log.get(i);
+            model.addRow(row);
+        }
+    }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Home().setVisible(true);
+                try {
+                    new Home().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

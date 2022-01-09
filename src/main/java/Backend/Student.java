@@ -10,16 +10,23 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 
-class Student extends User{
+public final class Student extends User{
     //local variable
     String modules[];
+    ArrayList<Student> Student_Details;
+    ArrayList<String> student_name;
     
     //default constructor
-    Student() throws ClassNotFoundException, SQLException{
+    public Student() throws ClassNotFoundException, SQLException{
         con = new DB_Connection().connect();
         st = con.createStatement();
-        
+        getStudentDetails();
     } 
+    
+    //parameterized constructor
+    Student(int id, String name, String email, String date, String course_name){
+        
+    }
     
     //search course
     ArrayList searchCourse(int course_id) throws SQLException{
@@ -41,6 +48,25 @@ class Student extends User{
     protected boolean enrollCourse(int course_id){
         
         return true;
+    }
+    
+    //return total courses
+    public int getTotalStudentsCount(){
+        return Student_Details.size();
+    }
+    
+    public ArrayList<Student> getStudentDetails() throws SQLException{
+        Student_Details = new ArrayList<>();
+        
+        //DB query
+        query = "SELECT * FROM Student";
+        rs = st.executeQuery(query);
+        //iterating the rows from table
+        while(rs.next()){
+            Student_Details.add(new Student(rs.getInt("sid"),rs.getString("username"),rs.getString("email"),rs.getString("date"),rs.getString("course")));
+        }
+        
+        return Student_Details;
     }
     
     public static void main(String[] args) throws ClassNotFoundException, SQLException {

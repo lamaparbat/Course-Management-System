@@ -1,4 +1,4 @@
-import Backend.Instructor;
+import Backend.Admin;
 import Backend.User;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -230,7 +230,7 @@ public class Tutor_Form extends javax.swing.JFrame {
         String t3 = tutor3.getText();
         
         //backend new tutor add
-        if(new Instructor().addTutor(mid, t1, t2, t3)){
+        if(new Admin().addTutor(mid, t1, t2, t3)){
             System.out.println("Module tutors added successfully!!");
         }else{
             System.out.println("Module tutors failed to add!!");

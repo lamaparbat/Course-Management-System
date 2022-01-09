@@ -202,13 +202,10 @@ public class Login extends javax.swing.JFrame {
         String email_val = email.getText();
         String password_val = password.getText();
         if (login_mode != "Select user mode" && email_val != "Enter email" && password_val != "password") {
-            System.out.println(login_mode + " " + password_val);
-
             //condition for empty field rejection
             if (email_val.length() > 0 && password_val.length() > 0 && login_mode.length() > 0) {
                 //backend login fucntionality
                 boolean login_status = new User().login(login_mode, email_val, password_val);
-                System.out.println("Login Status: " + login_status);
                 if (login_status) {
                     //dispose the current login panel
                     this.dispose();

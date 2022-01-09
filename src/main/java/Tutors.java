@@ -541,7 +541,7 @@ public class Tutors extends javax.swing.JFrame {
         activity_table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         activity_table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         activity_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
-        activity_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+//        activity_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
         jScrollPane1.setViewportView(activity_table);
 
@@ -995,7 +995,7 @@ public class Tutors extends javax.swing.JFrame {
     }
 
     private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) {
-
+        new Delete_Tutor().setVisible(true);
     }
 
     private void search_inpKeyReleased(java.awt.event.KeyEvent evt) {

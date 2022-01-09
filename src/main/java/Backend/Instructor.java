@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Instructor extends User {
+public final class Instructor extends User {
 
     //tutor name list
     ArrayList<Instructor> tutor_list = new ArrayList<Instructor>();
@@ -57,9 +57,14 @@ public class Instructor extends User {
         //database query
         return details;
     }
-    
+
+    //return total tutors count
+    public int getTotalTutorsCount() {
+        return tutor_name_list.size();
+    }
+
     //set the setTutorNameList
-    protected void setTutorNameList() throws SQLException, ClassNotFoundException{
+    protected void setTutorNameList() throws SQLException, ClassNotFoundException {
         //db connection
         Connection con = new DB_Connection().connect();
 
@@ -74,11 +79,11 @@ public class Instructor extends User {
             tutor_list.add(new Instructor(rs.getInt("iid"), rs.getString("username"), rs.getString("email"), rs.getString("phone"), rs.getString("date")));
             tutor_name_list.add(rs.getString("username"));
         }
-       
+
     }
 
     //is tutor exist ?
-    public boolean isTutorExist(String tutor) throws SQLException {        
+    public boolean isTutorExist(String tutor) throws SQLException {
         return tutor_name_list.contains(tutor);
     }
 
@@ -92,35 +97,16 @@ public class Instructor extends User {
         return tutor_list;
     }
 
-    //add tutors
-    public boolean addTutor(int uid, String tutor1, String tutor2, String tutor3) throws SQLException, ClassNotFoundException {
-        //bind the three tutor string into on string format
-        StringBuffer sb = new StringBuffer();
-        sb.append(tutor1 + ",");
-        sb.append(tutor2 + ",");
-        sb.append(tutor3);
-        String tutors = sb.toString();
-
-        query = "UPDATE module SET instructor='" + tutors + "' WHERE mid='" + uid + "'";
-
-        //check if insert success or not
-        if (st.executeUpdate(query) > 0) {
-            System.out.println("Course added successfully!");
-
-            return true;
-        } else {
-            System.out.println("Course failed to add!");
-            return false;
-        }
-    }
-    
     //edit tutors
-    public boolean editTutor(int id, String name, String email, String phone) throws SQLException{
-        query = "UPDATE Instructor SET username='"+name+"', email='"+email+"', phone='"+phone+"' WHERE iid='"+id+"'";
-        if(st.executeUpdate(query) > 0){
+    public boolean editTutor(int id, String name, String email, String phone) throws SQLException, ClassNotFoundException {
+        query = "UPDATE Instructor SET username='" + name + "', email='" + email + "', phone='" + phone + "' WHERE iid='" + id + "'";
+        if (st.executeUpdate(query) > 0) {
+            //update activity table
+            String history = "Tutor: " + name + " recently Updated.   Time:" + new Admin().cal.getTime();
+            new Admin().addNewActivity(history);
             System.out.println("Tutor updated successfully!!");
             return true;
-        }else{
+        } else {
             System.out.println("Tutor failed to update!!");
             return false;
         }

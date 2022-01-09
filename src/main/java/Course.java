@@ -984,7 +984,7 @@ public class Course extends javax.swing.JFrame {
     }
 
     private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        new Delete_Course().setVisible(true);
     }
 
     private void search_inpKeyReleased(java.awt.event.KeyEvent evt) {

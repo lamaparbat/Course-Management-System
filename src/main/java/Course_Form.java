@@ -1,4 +1,3 @@
-
 import Backend.Admin;
 import Backend.Instructor;
 import Backend.Module;
@@ -7,10 +6,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 
 public class Course_Form extends javax.swing.JFrame{
-
     //course attr
     private int seat_val, years = 3;
     private String course_name_val, batch_date_val;
@@ -35,6 +34,7 @@ public class Course_Form extends javax.swing.JFrame{
 
     public Course_Form() {
         initComponents();
+        new Course_Form().setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -922,16 +922,21 @@ public class Course_Form extends javax.swing.JFrame{
         
         //pass data to backend for insertion operation
         if(new Admin().addCourse(course_name_val, seat_val,batch_date_val, year1, year2, year3)){
-            System.out.println("Course Data succesfully inserted !!");
-        }
-//        
+            //update activity table
+            String history = "  Course: " + course_name_val + " recently Added.   Time:" + new Admin().cal.getTime();
+            new Admin().addNewActivity(history);
+            JOptionPane.showMessageDialog(null, "New Course uploaded successfully !!");
+            new Course_Form().setVisible(false);
+        }else{
+            JOptionPane.showMessageDialog(null, "Please fill the value carefully !!", "Failed to upload course !!", JOptionPane.ERROR_MESSAGE);
+        }   
 
     }
 
     public static void main(String args[]) throws SQLException {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Course_Form().setVisible(true);
+                new Course_Form();
             }
         });
     }

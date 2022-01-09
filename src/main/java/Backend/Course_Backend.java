@@ -7,10 +7,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Course_Backend {
+
     //store the entire course details
-    private ArrayList<Course_Backend> course_details = new ArrayList();
-    private ArrayList<String> course_name = new ArrayList();
-        
+    private ArrayList<Course_Backend> course_details;
+    private ArrayList<String> course_name;
+
     int cid, seats;
     protected String cname, batch, modules;
     //DB config
@@ -38,9 +39,18 @@ public class Course_Backend {
         this.cid = obj.cid;
         return cid;
     }
+    
+    //return total courses
+    public int getTotalCoursesCount(){
+        return course_details.size();
+    }
 
     // return course name list
     public ArrayList<String> courseNameList() throws SQLException {
+        course_name = new ArrayList();
+        for (Course_Backend obj : course_details) {
+            course_name.add(obj.cname);
+        }
         return course_name;
     }
 
@@ -70,6 +80,7 @@ public class Course_Backend {
 
     //get all courses
     public ArrayList getAllCourseDetails() throws SQLException, ClassNotFoundException {
+        course_details = new ArrayList();
         //connection
         con = new DB_Connection().connect();
 
@@ -84,7 +95,6 @@ public class Course_Backend {
         //iterate the object
         while (rs.next()) {
             course_details.add(new Course_Backend(rs.getInt("cid"), rs.getString("cname"), rs.getInt("seats"), rs.getString("batch"), rs.getString("total_years")));
-            course_name.add(rs.getString("cname"));
         }
 
         return course_details;
