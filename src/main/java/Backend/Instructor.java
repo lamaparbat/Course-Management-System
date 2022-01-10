@@ -2,17 +2,17 @@ package Backend;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public final class Instructor extends User {
 
     //tutor name list
-    ArrayList<Instructor> tutor_list = new ArrayList<Instructor>();
+    ArrayList<Instructor> tutor_list = new ArrayList<>();
     ArrayList<String> tutor_name_list = new ArrayList<>();
 
     //default constructor
     public Instructor() throws SQLException, ClassNotFoundException {
-        setTutorNameList();
     }
 
     //parameterized constructor
@@ -59,15 +59,13 @@ public final class Instructor extends User {
     }
 
     //return total tutors count
-    public int getTotalTutorsCount() {
+    public int getTotalTutorsCount() throws SQLException, ClassNotFoundException {
+        setTutorNameList();
         return tutor_name_list.size();
     }
 
     //set the setTutorNameList
     protected void setTutorNameList() throws SQLException, ClassNotFoundException {
-        //db connection
-        Connection con = new DB_Connection().connect();
-
         //select query
         query = "SELECT * FROM Instructor";
 
@@ -83,17 +81,20 @@ public final class Instructor extends User {
     }
 
     //is tutor exist ?
-    public boolean isTutorExist(String tutor) throws SQLException {
+    public boolean isTutorExist(String tutor) throws SQLException, ClassNotFoundException {
+        setTutorNameList();
         return tutor_name_list.contains(tutor);
     }
 
     //get all tutor name in list
     private ArrayList<String> getTutorNameList() throws SQLException, ClassNotFoundException {
+        setTutorNameList();
         return tutor_name_list;
     }
 
     //get all tutors list object
     public ArrayList<Instructor> getTutorsList() throws ClassNotFoundException, SQLException {
+        setTutorNameList();
         return tutor_list;
     }
 
@@ -112,4 +113,24 @@ public final class Instructor extends User {
         }
     }
 
+    //search tutors
+    public ArrayList<Instructor> searchTutors(String keyword) throws SQLException {
+        ArrayList<Instructor> result = new ArrayList<>();
+        //mapping tutorlist data
+//        for(Instructor i: tutor_list){
+//            if(i.name.contains(keyword)){
+//                System.out.println(i.name);
+//                result.add(i);
+//            }
+//        }
+
+//DB Query
+        query = "SELECT * FROM Instructor WHERE username LIKE '" + keyword + "%'";
+        rs = st.executeQuery(query);
+        while (rs.next()) {
+            result.add(new Instructor(rs.getInt("iid"), rs.getString("username"), rs.getString("email"), rs.getString("date"), rs.getString("date")));
+        }
+
+        return result;
+    }
 }

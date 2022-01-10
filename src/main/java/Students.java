@@ -1,40 +1,50 @@
 
-import Backend.Course_Backend;
+import Backend.DB_Connection;
+import Backend.Instructor;
+import Backend.Student;
 import Backend.User;
+import java.awt.Color;
 import java.awt.Component;
-import java.awt.Window;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import java.awt.Desktop;
 import java.awt.Font;
+import java.awt.Window;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-public class Course extends javax.swing.JFrame {
-    ArrayList<Course_Backend> courses;
-    public Course() throws SQLException, ClassNotFoundException {
+public class Students extends javax.swing.JFrame {
+
+    //array to store all tutors objects
+    ArrayList<Student> students;
+
+    //default constructor
+    public Students() throws ClassNotFoundException, SQLException {
         initComponents();
-        activity_table.getColumnModel().getColumn(0).setPreferredWidth(30);
-        activity_table.getColumnModel().getColumn(1).setPreferredWidth(200);
-        activity_table.getColumnModel().getColumn(2).setPreferredWidth(90);
+
+        //table struct
+        activity_table.getColumnModel().getColumn(0).setPreferredWidth(27);
+        activity_table.getColumnModel().getColumn(1).setPreferredWidth(120);
+        activity_table.getColumnModel().getColumn(2).setPreferredWidth(100);
         activity_table.getColumnModel().getColumn(3).setPreferredWidth(90);
-        activity_table.getColumnModel().getColumn(4).setPreferredWidth(40);
-        //get the list of course
-        courses = new Course_Backend().getAllCourseDetails();
-        showCourses(courses);
+        activity_table.getColumnModel().getColumn(4).setPreferredWidth(90);
+
+        students = new Student().getStudentDetails();
+        
+        displayStudents(students);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
+    private void initComponents() throws SQLException, ClassNotFoundException {
 
         sidebar = new javax.swing.JPanel();
         sibar_title = new javax.swing.JLabel();
@@ -123,15 +133,13 @@ public class Course extends javax.swing.JFrame {
         jPanel7.setLayout(null);
         jPanel2.add(jPanel7, null);
 
-        course_btn.setBackground(new java.awt.Color(255, 153, 153));
         course_btn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         course_btn.setForeground(new java.awt.Color(255, 255, 255));
         course_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jLabel29.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/course2.png")); // NOI18N
+        jLabel29.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/course.png")); // NOI18N
 
         jLabel36.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
-        jLabel36.setForeground(new java.awt.Color(255, 255, 255));
         jLabel36.setText("Courses");
 
         javax.swing.GroupLayout course_btnLayout = new javax.swing.GroupLayout(course_btn);
@@ -151,13 +159,15 @@ public class Course extends javax.swing.JFrame {
                         .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
+        calendar_btn.setBackground(new java.awt.Color(255, 153, 153));
         calendar_btn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         calendar_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jLabel38.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/calendar.png")); // NOI18N
+        jLabel38.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/student2.png")); // NOI18N
 
         jLabel39.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
-        jLabel39.setText("Calendar");
+        jLabel39.setForeground(Color.WHITE);
+        jLabel39.setText("Students");
 
         javax.swing.GroupLayout calendar_btnLayout = new javax.swing.GroupLayout(calendar_btn);
         calendar_btn.setLayout(calendar_btnLayout);
@@ -275,12 +285,14 @@ public class Course extends javax.swing.JFrame {
                         .addComponent(jLabel49, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
+        tutor_btn.setBackground(new java.awt.Color(238, 238, 238));
         tutor_btn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         tutor_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         jLabel50.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/teachers.png")); // NOI18N
 
         jLabel51.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
+        jLabel51.setForeground(Color.BLACK);
         jLabel51.setText("Tutors");
 
         javax.swing.GroupLayout tutor_btnLayout = new javax.swing.GroupLayout(tutor_btn);
@@ -357,9 +369,9 @@ public class Course extends javax.swing.JFrame {
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (URISyntaxException ex) {
-                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
-                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -491,17 +503,18 @@ public class Course extends javax.swing.JFrame {
         );
 
         jScrollPane1.setBackground(new java.awt.Color(204, 204, 204));
+
         activity_table.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "ID", "Course Name", "Seats", "Batch", "No. of Yeaers"
+                    "ID", "Student Name", "Email", "Phone", "Date", "Course"
                 }
         ) {
             Class[] types = new Class[]{
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean[]{
-                true, true, false, false, false, false
+                true, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -516,21 +529,22 @@ public class Course extends javax.swing.JFrame {
         //increase table header size
         JTableHeader th = activity_table.getTableHeader();
         th.setFont(new Font("Dialog", Font.BOLD, 14));
-        
+
         //increase the table row height
         activity_table.setRowHeight(activity_table.getRowHeight() + 20);
-        
+
         //increase table rows font size
         activity_table.setFont(new Font("Serif", Font.PLAIN, 14));
 
         //set the table rows and cols width
         activity_table.setAutoResizeMode(activity_table.AUTO_RESIZE_OFF);
 
-        activity_table.getColumnModel().getColumn(0).setMinWidth(25);
-        activity_table.getColumnModel().getColumn(1).setMinWidth(100);
-        activity_table.getColumnModel().getColumn(2).setMinWidth(30);
-        activity_table.getColumnModel().getColumn(3).setMinWidth(50);
-        activity_table.getColumnModel().getColumn(4).setMinWidth(400);
+        activity_table.getColumnModel().getColumn(0).setMinWidth(50);
+        activity_table.getColumnModel().getColumn(1).setMinWidth(150);
+        activity_table.getColumnModel().getColumn(2).setMinWidth(180);
+        activity_table.getColumnModel().getColumn(3).setMinWidth(100);
+        activity_table.getColumnModel().getColumn(4).setMinWidth(105);
+        activity_table.getColumnModel().getColumn(5).setMinWidth(100);
 
         //center the rows values
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -540,11 +554,12 @@ public class Course extends javax.swing.JFrame {
         activity_table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         activity_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         activity_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        activity_table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 
         jScrollPane1.setViewportView(activity_table);
 
         dashboard_title.setFont(new java.awt.Font("Menlo", 0, 20)); // NOI18N
-        dashboard_title.setText("Course");
+        dashboard_title.setText("Students");
 
         notif_icon.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/notif.png")); // NOI18N
 
@@ -809,15 +824,21 @@ public class Course extends javax.swing.JFrame {
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        add_btn.setText("Add Course");
+        add_btn.setText("Edit Student");
         add_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         add_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                add_btnMouseClicked(evt);
+                try {
+                    add_btnMouseClicked(evt);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
-        edit_btn.setText("Edit Course");
+        edit_btn.setText("Delete Student");
         edit_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         edit_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -825,7 +846,7 @@ public class Course extends javax.swing.JFrame {
             }
         });
 
-        delete_btn.setText("Delete Course");
+        delete_btn.setText("View Progress");
         delete_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         delete_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -840,10 +861,10 @@ public class Course extends javax.swing.JFrame {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 try {
                     search_inpKeyReleased(evt);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
-                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -983,23 +1004,26 @@ public class Course extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Course_Form().setVisible(true);
+    //edit student
+    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
+        new Edit_Student().setVisible(true);
     }
 
+    //delete student
     private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Edit_Course().setVisible(true);
+       new Delete_Student().setVisible(true);
     }
 
+    //view student progress
     private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Delete_Course().setVisible(true);
+        new Progress_ID().setVisible(true);
     }
 
-    //search course on key release
-    private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws ClassNotFoundException, SQLException {
+    private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws SQLException, ClassNotFoundException {
         String keyword = search_inp.getText();
-        ArrayList<Course_Backend> list = new Course_Backend().searchCourse(keyword);
-        showCourses(list);
+        ArrayList<Student> list = new Student().searchStudent(keyword);
+
+        displayStudents(list);
     }
 
     //dashboard navigate
@@ -1034,8 +1058,8 @@ public class Course extends javax.swing.JFrame {
         String user = "Admin";
         if (user != "Student") {
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-//            win.dispose();
-//            new Calendar().setVisible(true);
+            win.dispose();
+            new Students().setVisible(true);
         }
     }
 
@@ -1069,38 +1093,37 @@ public class Course extends javax.swing.JFrame {
         }
     }
 
-    //show all courses on table
-    private void showCourses(ArrayList<Course_Backend> list) throws SQLException, ClassNotFoundException {
-        //accessing the table model
+    //display all tutors on table
+    private void displayStudents(ArrayList<Student> list) throws ClassNotFoundException, SQLException {
+        //access table model
         DefaultTableModel model = (DefaultTableModel) activity_table.getModel();
-        
-        //empty the model
-        model.setRowCount(0);
-        
-        //access the table columns 
-        Object[] row = new Object[5];
 
-        //set the values to table using cols
-        for (Course_Backend i : list) {
-            row[0] = new Course_Backend().getCourseId(i);
-            row[1] = new Course_Backend().getCourseName(i);
-            row[2] = new Course_Backend().getSeats(i);
-            row[3] = new Course_Backend().getBatch(i);
-            row[4] = new Course_Backend().getYears(i);
-            //add the rows to table model 
+        //reset the rows before new data filled
+        model.setRowCount(0);
+
+        Object[] row = new Object[6];
+
+        for (Student i : list) {
+            row[0] = new Student().getStudentId(i);
+            row[1] = new Student().getStudentName(i);
+            row[2] = new Student().getEmail(i);
+            row[3] = new Student().getPhone(i);
+            row[4] = new Student().getDate(i);
+            row[5] = new Student().getCourseName(i);
             model.addRow(row);
         }
+
     }
 
-    public static void main(String args[]) throws SQLException, ClassNotFoundException {
+    public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new Course().setVisible(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
+                    new Students().setVisible(true);
                 } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1178,7 +1201,6 @@ public class Course extends javax.swing.JFrame {
     private javax.swing.JLabel sibar_title;
     private javax.swing.JPanel sidebar;
     private javax.swing.JPanel tutor_btn;
-    private DefaultTableCellRenderer cellRenderer;
-    Desktop desktop;
+    private Desktop desktop;
     // End of variables declaration                   
 }

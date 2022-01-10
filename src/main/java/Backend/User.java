@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -17,6 +18,7 @@ public class User {
     protected int id, years = 3;
     //require attr
     protected String name, address, email, query, cur_date, phn;
+    ArrayList<Instructor> tutor_list;
 
     //db config
     protected Connection con;
@@ -29,7 +31,7 @@ public class User {
         //db config init
         con = new DB_Connection().connect();
         st = con.createStatement();
-        //get current date
+        //get current date   con = new DB_Connection().connect();
         today = LocalDate.now(ZoneId.of("Asia/Katmandu"));
         cur_date = today.toString();
     }
@@ -130,7 +132,7 @@ public class User {
             }
         }
     }
-
+    
     //logout
     public boolean logout() {
         return true;

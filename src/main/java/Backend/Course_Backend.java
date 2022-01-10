@@ -12,8 +12,8 @@ public class Course_Backend {
     private ArrayList<Course_Backend> course_details;
     private ArrayList<String> course_name;
 
-    int cid, seats;
-    protected String cname, batch, modules;
+    int cid, seats, years;
+    protected String cname, batch;
     //DB config
     Connection con;
     String query;
@@ -26,12 +26,12 @@ public class Course_Backend {
     }
 
     //parameterized constructor
-    public Course_Backend(int cid, String cname, int seats, String batch, String modules) {
+    public Course_Backend(int cid, String cname, int seats, String batch, int year) {
         this.cid = cid;
         this.cname = cname;
         this.seats = seats;
         this.batch = batch;
-        this.modules = modules;
+        this.years = year;
     }
 
     //reutrn course id
@@ -71,11 +71,10 @@ public class Course_Backend {
         this.batch = obj.batch;
         return batch;
     }
-
-    //return modules list
-    public String getModules(Course_Backend obj) {
-        this.modules = obj.modules;
-        return modules;
+    
+    public int getYears(Course_Backend obj){
+        this.years = obj.years;
+        return years;
     }
 
     //get all courses
@@ -94,16 +93,23 @@ public class Course_Backend {
 
         //iterate the object
         while (rs.next()) {
-            course_details.add(new Course_Backend(rs.getInt("cid"), rs.getString("cname"), rs.getInt("seats"), rs.getString("batch"), rs.getString("total_years")));
+            course_details.add(new Course_Backend(rs.getInt("cid"), rs.getString("cname"), rs.getInt("seats"), rs.getString("batch"), rs.getInt("total_years")));
         }
 
         return course_details;
     }
 
-    //rename the coursename
-    protected boolean setCoursename(int course_id, String cname) {
-        //database query
 
-        return true;
+    
+    //search course
+    public ArrayList<Course_Backend> searchCourse(String keyword) throws SQLException{
+        ArrayList<Course_Backend> result = new ArrayList<>();
+        //DB Query
+        query = "SELECT * FROM Course WHERE cname LIKE '"+keyword+"%'";
+        rs = st.executeQuery(query);
+        while(rs.next()){
+            result.add(new Course_Backend(rs.getInt("cid"),rs.getString("cname"),rs.getInt("seats"),rs.getString("batch"),rs.getInt("total_years")));
+        }
+        return result;
     }
 }

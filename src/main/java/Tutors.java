@@ -1,4 +1,3 @@
-
 import Backend.DB_Connection;
 import Backend.Instructor;
 import Backend.User;
@@ -20,22 +19,27 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 public class Tutors extends javax.swing.JFrame {
+    //array to store all tutors objects
+    ArrayList<Instructor> tutors;
 
     //default constructor
     public Tutors() throws ClassNotFoundException, SQLException {
         initComponents();
+        
         //table struct
         activity_table.getColumnModel().getColumn(0).setPreferredWidth(27);
         activity_table.getColumnModel().getColumn(1).setPreferredWidth(120);
         activity_table.getColumnModel().getColumn(2).setPreferredWidth(100);
         activity_table.getColumnModel().getColumn(3).setPreferredWidth(90);
         activity_table.getColumnModel().getColumn(4).setPreferredWidth(90);
-        displayTutors();
+        
+        tutors = new Instructor().getTutorsList();
+        displayTutors(tutors);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
+    private void initComponents() throws SQLException, ClassNotFoundException {
 
         sidebar = new javax.swing.JPanel();
         sibar_title = new javax.swing.JLabel();
@@ -108,6 +112,7 @@ public class Tutors extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         search_inp = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -846,7 +851,13 @@ public class Tutors extends javax.swing.JFrame {
         search_inp.setBorder(null);
         search_inp.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                search_inpKeyReleased(evt);
+                try {
+                    search_inpKeyReleased(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -998,8 +1009,11 @@ public class Tutors extends javax.swing.JFrame {
         new Delete_Tutor().setVisible(true);
     }
 
-    private void search_inpKeyReleased(java.awt.event.KeyEvent evt) {
-        // TODO add your handling code here:
+    private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws SQLException, ClassNotFoundException {
+        String keyword = search_inp.getText();
+        ArrayList<Instructor> list = new Instructor().searchTutors(keyword);
+
+        displayTutors(list);
     }
 
     //dashboard navigate
@@ -1070,16 +1084,16 @@ public class Tutors extends javax.swing.JFrame {
     }
 
     //display all tutors on table
-    private void displayTutors() throws ClassNotFoundException, SQLException {
+    private void displayTutors(ArrayList<Instructor> list) throws ClassNotFoundException, SQLException {
         //access table model
         DefaultTableModel model = (DefaultTableModel) activity_table.getModel();
-
-        //array to store all tutors objects
-        ArrayList<Instructor> tutors = new Instructor().getTutorsList();
-
+        
+        //reset the rows before new data filled
+        model.setRowCount(0);
+        
         Object[] row = new Object[5];
 
-        for (Instructor i : tutors) {
+        for (Instructor i : list) {
             row[0] = new Instructor().getInstructorId(i);
             row[1] = new Instructor().getInstructorName(i);
             row[2] = new Instructor().getEmail(i);

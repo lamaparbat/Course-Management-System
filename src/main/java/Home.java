@@ -257,10 +257,10 @@ public final class Home extends javax.swing.JFrame {
         calendar_btn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         calendar_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jLabel38.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/calendar.png")); // NOI18N
+        jLabel38.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/student.png")); // NOI18N
 
         jLabel39.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
-        jLabel39.setText("Calendar");
+        jLabel39.setText("Students");
 
         javax.swing.GroupLayout calendar_btnLayout = new javax.swing.GroupLayout(calendar_btn);
         calendar_btn.setLayout(calendar_btnLayout);
@@ -1153,8 +1153,8 @@ public final class Home extends javax.swing.JFrame {
         String user = "Admin";
         if (user != "Student") {
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-//            win.dispose();
-//            new Calendar().setVisible(true);
+            win.dispose();
+            new Students().setVisible(true);
         }
     }
 
@@ -1174,7 +1174,7 @@ public final class Home extends javax.swing.JFrame {
         if (user != "Student") {
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();
-//            new Setting().setVisible(true);
+            new Setting().setVisible(true);
         }
     }
 

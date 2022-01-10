@@ -134,11 +134,6 @@ public class Admin extends User implements Activity {
         }
     }
 
-    //view course
-    public ArrayList viewCourse(ArrayList<Course_Backend> courses) {
-        return courses;
-    }
-
     //update course
     public boolean updateCourse(int course_id, String cname, String batch, int seats) throws SQLException, ClassNotFoundException {
 
@@ -226,6 +221,32 @@ public class Admin extends User implements Activity {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
         return activityList;
+    }
+
+    //update student
+    public boolean updateStudent(int id, String name, String email, String phone, String course_name) throws SQLException {
+        //DB Query
+        query = "UPDATE Student SET username='" + name + "', email='" + email + "', phone='" + phone + "', course='" + course_name + "' WHERE sid='" + id + "'";
+        if (st.executeUpdate(query) > 0) {
+            System.out.println("Student ID:" + id + " successfully updated !!");
+            //update activity table
+            String history = "  Student ID: " + id + " succesfully updated !!.   Time:" + cal.getTime();
+            addNewActivity(history);
+            return true;
+        }
+        return false;
+    }
+
+    //delete student
+    public boolean deleteStudent(int studentId) throws SQLException {
+        query = "DELETE FROM Student WHERE sid='" + studentId + "'";
+        if (st.executeUpdate(query) > 0) {
+            //update activity table
+            String history = "Student ID: " + studentId + " recently Deleted.   Time:" + cal.getTime();
+            addNewActivity(history);
+            return true;
+        }
+        return false;
     }
 
 }
