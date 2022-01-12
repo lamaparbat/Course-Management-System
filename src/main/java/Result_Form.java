@@ -1,3 +1,8 @@
+
+import Backend.Instructor;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 public class Result_Form extends javax.swing.JFrame {
     public Result_Form() {
         initComponents();
@@ -163,8 +168,20 @@ public class Result_Form extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void upload_resultMouseClicked(java.awt.event.MouseEvent evt) {                                           
-        // TODO add your handling code here:
+    private void upload_resultMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException { 
+        int id_val = Integer.parseInt(id.getText()); 
+        String stud_name = name.getText();
+        String module_name_val = module_name.getText();
+        float percent_val = Float.parseFloat(percentage.getText());
+        String grade_val = grade.getText();
+        
+        //send data to backend
+        if(new Instructor().setProgressReport(id_val, stud_name, module_name_val, percent_val, grade_val)){
+            JOptionPane.showMessageDialog(null, "Report Successfully uploaded!!");
+        }else{
+            JOptionPane.showMessageDialog(null, "Failed to upload report!!");
+        }
+        
     }                                          
 
     public static void main(String args[]) {

@@ -76,11 +76,36 @@ public final class Student extends User{
         return obj.course_name;
     }
     
+    public String getModuleName(Student obj){
+        return obj.module_name;
+    }
+    
+    public float getPercentage(Student obj){
+        return obj.percentage;
+    }
+    
+    public String getGrade(Student obj){
+        return obj.grade_type;
+    }
+    
     //search course
     public ArrayList searchStudent(String keyword) throws SQLException{
         ArrayList<Student> student = new ArrayList();
         //database query
         query = "SELECT * FROM Student WHERE username LIKE '"+keyword+"%'";
+        rs = st.executeQuery(query);
+        
+        while(rs.next()){
+            student.add(new Student(rs.getInt("sid"),rs.getString("username"),rs.getString("email"),rs.getString("phone"),rs.getString("date"),rs.getString("course")));
+        }
+        return student;
+    }
+    
+        //search course by id
+    public ArrayList searchStudent(int id) throws SQLException{
+        ArrayList<Student> student = new ArrayList();
+        //database query
+        query = "SELECT * FROM Student WHERE sid  ='"+id+"'";
         rs = st.executeQuery(query);
         
         while(rs.next()){
@@ -128,7 +153,7 @@ public final class Student extends User{
          ArrayList<Student> report = new  ArrayList<>();
          
          //db query
-         query = "SELECT * FORM Report WHERE sid='"+sid+"'";
+         query = "SELECT * FROM Result WHERE sid='"+sid+"'";
          rs = st.executeQuery(query);
          while(rs.next()){
              report.add(new Student(rs.getInt("rid"),rs.getString("name"),rs.getFloat("percentage"),rs.getString("grade"),rs.getString("module_name")));

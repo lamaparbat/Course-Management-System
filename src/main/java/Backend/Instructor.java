@@ -116,15 +116,6 @@ public final class Instructor extends User {
     //search tutors
     public ArrayList<Instructor> searchTutors(String keyword) throws SQLException {
         ArrayList<Instructor> result = new ArrayList<>();
-        //mapping tutorlist data
-//        for(Instructor i: tutor_list){
-//            if(i.name.contains(keyword)){
-//                System.out.println(i.name);
-//                result.add(i);
-//            }
-//        }
-
-//DB Query
         query = "SELECT * FROM Instructor WHERE username LIKE '" + keyword + "%'";
         rs = st.executeQuery(query);
         while (rs.next()) {
@@ -132,5 +123,13 @@ public final class Instructor extends User {
         }
 
         return result;
+    }
+    
+        //upload progress report
+    public boolean setProgressReport(int sid, String sname, String mname, float percentage, String grade) throws SQLException{
+        System.out.println(sid+" "+  sname+" "+  mname+" "+  percentage+" "+ grade );
+        //db query
+        query = "INSERT INTO Result(name, module_name, percentage, grade, sid) VALUES('"+sname+"', '"+mname+"', '"+percentage+"', '"+grade+"', '"+sid+"')";
+        return st.executeUpdate(query) > 0;
     }
 }

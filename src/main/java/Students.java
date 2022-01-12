@@ -1016,7 +1016,7 @@ public class Students extends javax.swing.JFrame {
 
     //view student progress
     private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Progress_ID().setVisible(true);
+        new Result_Sheet().setVisible(true);
     }
 
     private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws SQLException, ClassNotFoundException {
