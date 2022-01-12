@@ -2,6 +2,10 @@ package Backend;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,7 +49,7 @@ public class User {
     }
 
     //admin login
-    public boolean login(String login_mode, String email_val, String password_val) throws ClassNotFoundException, SQLException {
+    public boolean login(String login_mode, String email_val, String password_val) throws ClassNotFoundException, SQLException, FileNotFoundException, IOException {
         System.out.println("Database Connected successfully !!");
 
         //database query
@@ -65,7 +69,13 @@ public class User {
             Icon icon = new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/logo.png");
             successModal.showMessageDialog(null, "Welcome to Course Management System", "Login Successfull !!", JOptionPane.INFORMATION_MESSAGE, icon);
             t.stop();
-
+            
+            //save data to file
+            FileWriter file = new FileWriter("credential.txt");
+            file.write(email_val+"\n");
+            file.write(login_mode);
+            file.close();
+            
             //update activity table
             String history = login_mode + ": " + email_val + " recently logged in.   Time:" + new Admin().cal.getTime();
             new Admin().addNewActivity(history);
@@ -135,6 +145,49 @@ public class User {
     
     //logout
     public boolean logout() {
-        return true;
+        File file = new File("Credential.txt");
+        if(file.delete()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    //update profile
+    public boolean updateProfile(String username,String email, String phone) throws FileNotFoundException, SQLException{
+        //db query
+        query = "UPDATE "+new Credential().user_type+" SET username='"+username+"', email='"+email+"', phone='"+phone+"' WHERE email='"+email+"'";
+        if(st.executeUpdate(query)>0){
+            return true;
+        }
+        
+        return false;
+    }
+    
+    //get profile data
+    public ArrayList<String> profileData(String user_type,String email) throws SQLException{
+         ArrayList<String> data = new  ArrayList<String>();
+         //DB query
+         query = "SELECT * FROM "+user_type+" WHERE email='"+email+"'";
+         rs = st.executeQuery(query);
+         while(rs.next()){
+             data.add(rs.getString("email"));
+             data.add(rs.getString("username"));
+             data.add(rs.getString("phone"));
+             data.add(rs.getString("date"));
+             data.add(rs.getString("password"));
+         }
+         
+         return data;
+    }
+    
+    //change password
+    public boolean changePassword(String user_type,String email, String old_password, String new_password) throws SQLException{
+        query = "UPDATE "+user_type+" SET password='"+new_password+"' WHERE email='"+email+"' AND password = '"+old_password+"'";
+        if(st.executeUpdate(query)>0){
+            System.out.println("Password successfully updated !!");
+            return true;
+        }
+        return false;
     }
 }

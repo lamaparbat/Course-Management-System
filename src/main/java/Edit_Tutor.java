@@ -2,6 +2,7 @@
 import Backend.Instructor;
 import java.awt.Component;
 import java.awt.Window;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,6 +90,8 @@ public class Edit_Tutor extends javax.swing.JFrame {
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Edit_Tutor.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
+                    Logger.getLogger(Edit_Tutor.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
                     Logger.getLogger(Edit_Tutor.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -198,7 +201,7 @@ public class Edit_Tutor extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void updateCourseMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
+    private void updateCourseMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
         int id = Integer.parseInt(iid.getText());
         String phone_num = phone.getText();
         String name = this.name.getText();
@@ -206,12 +209,12 @@ public class Edit_Tutor extends javax.swing.JFrame {
 
         //form validation
         if (id >= 0 && phone_num.length() > 0 && name.length() > 0 && email_val.length() > 0) {
-            //backend update course
-            if (new Instructor().editTutor(id, name, email_val, phone_num)) {
-                JOptionPane.showMessageDialog(null, "Tutor updated successfully!!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Tutor failed to update!!");
-            }
+                //backend update course
+                if (new Instructor().editTutor(id, name, email_val, phone_num)) {
+                    JOptionPane.showMessageDialog(null, "Tutor updated successfully!!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Tutor failed to update!!");
+                }
         }
     }
 

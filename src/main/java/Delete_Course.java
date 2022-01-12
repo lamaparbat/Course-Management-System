@@ -1,10 +1,10 @@
 
 import Backend.Admin;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
 
 public class Delete_Course extends javax.swing.JFrame {
 
@@ -62,6 +62,8 @@ public class Delete_Course extends javax.swing.JFrame {
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Delete_Course.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
+                    Logger.getLogger(Delete_Course.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
                     Logger.getLogger(Delete_Course.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -126,15 +128,15 @@ public class Delete_Course extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void deleteCourseMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
+    private void deleteCourseMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
         int cid = Integer.parseInt(course_id.getText());
-
         //backend 
-        if(new Admin().deleteCourse(cid)){
+        if (new Admin().deleteCourse(cid)) {
             JOptionPane.showMessageDialog(null, "Succesfully deleted !!");
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Failed to delete1 !!");
         }
+
     }
 
     public static void main(String args[]) {

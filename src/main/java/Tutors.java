@@ -1,3 +1,5 @@
+
+import Backend.Credential;
 import Backend.DB_Connection;
 import Backend.Instructor;
 import Backend.User;
@@ -5,6 +7,7 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Window;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,26 +16,28 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 public class Tutors extends javax.swing.JFrame {
+
     //array to store all tutors objects
     ArrayList<Instructor> tutors;
 
     //default constructor
     public Tutors() throws ClassNotFoundException, SQLException {
         initComponents();
-        
+
         //table struct
         activity_table.getColumnModel().getColumn(0).setPreferredWidth(27);
         activity_table.getColumnModel().getColumn(1).setPreferredWidth(120);
         activity_table.getColumnModel().getColumn(2).setPreferredWidth(100);
         activity_table.getColumnModel().getColumn(3).setPreferredWidth(90);
         activity_table.getColumnModel().getColumn(4).setPreferredWidth(90);
-        
+
         tutors = new Instructor().getTutorsList();
         displayTutors(tutors);
     }
@@ -112,7 +117,6 @@ public class Tutors extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         search_inp = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -826,6 +830,8 @@ public class Tutors extends javax.swing.JFrame {
                     Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -834,7 +840,11 @@ public class Tutors extends javax.swing.JFrame {
         edit_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         edit_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                edit_btnMouseClicked(evt);
+                try {
+                    edit_btnMouseClicked(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -842,7 +852,11 @@ public class Tutors extends javax.swing.JFrame {
         delete_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         delete_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                delete_btnMouseClicked(evt);
+                try {
+                    delete_btnMouseClicked(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -996,17 +1010,30 @@ public class Tutors extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
-        // Open the tutor form
-        new Signup().setVisible(true);
+    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
+        if (new Credential().user_type.equals("Admin")) {
+            new Signup().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
-    private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Edit_Tutor().setVisible(true);
+    private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
+        
+        if (new Credential().user_type.equals("Admin")) {
+            new Edit_Tutor().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Delete_Tutor().setVisible(true);
+    private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
+        if (new Credential().user_type.equals("Admin")) {
+           new Delete_Tutor().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws SQLException, ClassNotFoundException {
@@ -1087,10 +1114,10 @@ public class Tutors extends javax.swing.JFrame {
     private void displayTutors(ArrayList<Instructor> list) throws ClassNotFoundException, SQLException {
         //access table model
         DefaultTableModel model = (DefaultTableModel) activity_table.getModel();
-        
+
         //reset the rows before new data filled
         model.setRowCount(0);
-        
+
         Object[] row = new Object[5];
 
         for (Instructor i : list) {

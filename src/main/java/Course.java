@@ -1,4 +1,5 @@
 
+import Backend.Credential;
 import Backend.Course_Backend;
 import Backend.User;
 import java.awt.Component;
@@ -9,17 +10,21 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import java.awt.Desktop;
 import java.awt.Font;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 public class Course extends javax.swing.JFrame {
+
     ArrayList<Course_Backend> courses;
+
     public Course() throws SQLException, ClassNotFoundException {
         initComponents();
         activity_table.getColumnModel().getColumn(0).setPreferredWidth(30);
@@ -516,10 +521,10 @@ public class Course extends javax.swing.JFrame {
         //increase table header size
         JTableHeader th = activity_table.getTableHeader();
         th.setFont(new Font("Dialog", Font.BOLD, 14));
-        
+
         //increase the table row height
         activity_table.setRowHeight(activity_table.getRowHeight() + 20);
-        
+
         //increase table rows font size
         activity_table.setFont(new Font("Serif", Font.PLAIN, 14));
 
@@ -813,7 +818,11 @@ public class Course extends javax.swing.JFrame {
         add_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         add_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                add_btnMouseClicked(evt);
+                try {
+                    add_btnMouseClicked(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -821,7 +830,11 @@ public class Course extends javax.swing.JFrame {
         edit_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         edit_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                edit_btnMouseClicked(evt);
+                try {
+                    edit_btnMouseClicked(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -829,7 +842,11 @@ public class Course extends javax.swing.JFrame {
         delete_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         delete_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                delete_btnMouseClicked(evt);
+                try {
+                    delete_btnMouseClicked(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -983,16 +1000,32 @@ public class Course extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Course_Form().setVisible(true);
+    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
+        System.out.println(new Credential().user_type.equals("Admin"));
+        if (new Credential().user_type.equals("Admin")) {
+            new Course_Form().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
-    private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Edit_Course().setVisible(true);
+    private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
+
+        if (new Credential().user_type.equals("Admin")) {
+            new Edit_Course().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Delete_Course().setVisible(true);
+    private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
+
+        if (new Credential().user_type.equals("Admin")) {
+            new Delete_Course().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     //search course on key release
@@ -1011,52 +1044,45 @@ public class Course extends javax.swing.JFrame {
 
     //courses navigate
     private void courses_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Course().setVisible(true);
-        }
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Course().setVisible(true);
+
     }
 
     //tutors function
     private void tutors_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Tutors().setVisible(true);
-        }
+
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Tutors().setVisible(true);
+
     }
 
     //logout function
     private void calendar_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Students().setVisible(true);
-        }
+
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Students().setVisible(true);
+
     }
 
     //calendar navigate
     private void mail_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, URISyntaxException, IOException {
-        String user = "Admin";
-        if (user != "Student") {
-            // open browser and link to mail
-            desktop = Desktop.getDesktop();
-            desktop.browse(new URI("https://gmail.com/"));
-        }
+        // open browser and link to mail
+        desktop = Desktop.getDesktop();
+        desktop.browse(new URI("https://gmail.com/"));
+
     }
 
     //setting navigate
     private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Setting().setVisible(true);
-        }
+
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Setting().setVisible(true);
+
     }
 
     //logout navigate
@@ -1073,10 +1099,10 @@ public class Course extends javax.swing.JFrame {
     private void showCourses(ArrayList<Course_Backend> list) throws SQLException, ClassNotFoundException {
         //accessing the table model
         DefaultTableModel model = (DefaultTableModel) activity_table.getModel();
-        
+
         //empty the model
         model.setRowCount(0);
-        
+
         //access the table columns 
         Object[] row = new Object[5];
 

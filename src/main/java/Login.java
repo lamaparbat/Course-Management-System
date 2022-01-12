@@ -1,5 +1,6 @@
 
 import Backend.User;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,6 +79,8 @@ public class Login extends javax.swing.JFrame {
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -196,7 +199,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     //login 
-    private void loginMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
+    private void loginMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, IOException {
         String login_mode = mode.getSelectedItem().toString();
         // assigning input value to glob variable
         String email_val = email.getText();

@@ -10,6 +10,7 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -404,6 +406,8 @@ public final class Home extends javax.swing.JFrame {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -601,8 +605,8 @@ public final class Home extends javax.swing.JFrame {
         //increase table header size
         JTableHeader th = activity_table.getTableHeader();
         th.setFont(new Font("Dialog", Font.BOLD, 14));
-        
-        activity_table.setBackground(new java.awt.Color(29, 90, 250 ));
+
+        activity_table.setBackground(new java.awt.Color(29, 90, 250));
         activity_table.setForeground(new Color(250, 250, 250));
 
         //increase table header height
@@ -1130,52 +1134,40 @@ public final class Home extends javax.swing.JFrame {
 
     //courses navigate
     private void courses_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Course().setVisible(true);
-        }
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Course().setVisible(true);
     }
 
     //tutors function
     private void tutors_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Tutors().setVisible(true);
-        }
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Tutors().setVisible(true);
     }
 
     //logout function
-    private void calendar_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
+    private void calendar_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, FileNotFoundException {
+
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();
             new Students().setVisible(true);
-        }
     }
 
     //calendar navigate
     private void mail_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, URISyntaxException, IOException {
-        String user = "Admin";
-        if (user != "Student") {
+
             // open browser and link to mail
             desktop = Desktop.getDesktop();
             desktop.browse(new URI("https://gmail.com/"));
-        }
+
     }
 
     //setting navigate
     private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Setting().setVisible(true);
-        }
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Setting().setVisible(true);
     }
 
     //logout navigate
@@ -1197,21 +1189,17 @@ public final class Home extends javax.swing.JFrame {
         Object[] row = new Object[2];
         for (int i = 0; i < activity_log.size(); i++) {
             row[0] = i + 1;
-            row[1] = "  "+activity_log.get(i);
+            row[1] = "  " + activity_log.get(i);
             model.addRow(row);
         }
     }
 
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new Home().setVisible(true);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new Home().setVisible(true);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

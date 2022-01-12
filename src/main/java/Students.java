@@ -1,4 +1,5 @@
 
+import Backend.Credential;
 import Backend.DB_Connection;
 import Backend.Instructor;
 import Backend.Student;
@@ -8,6 +9,7 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Window;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -38,7 +41,7 @@ public class Students extends javax.swing.JFrame {
         activity_table.getColumnModel().getColumn(4).setPreferredWidth(90);
 
         students = new Student().getStudentDetails();
-        
+
         displayStudents(students);
     }
 
@@ -834,6 +837,8 @@ public class Students extends javax.swing.JFrame {
                     Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Students.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -842,7 +847,11 @@ public class Students extends javax.swing.JFrame {
         edit_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         edit_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                edit_btnMouseClicked(evt);
+                try {
+                    edit_btnMouseClicked(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Students.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -850,7 +859,11 @@ public class Students extends javax.swing.JFrame {
         delete_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         delete_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                delete_btnMouseClicked(evt);
+                try {
+                    delete_btnMouseClicked(evt);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Students.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -1005,18 +1018,31 @@ public class Students extends javax.swing.JFrame {
     }// </editor-fold>                        
 
     //edit student
-    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
-        new Edit_Student().setVisible(true);
+    private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
+        if (new Credential().user_type.equals("Admin")) {
+            new Edit_Student().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     //delete student
-    private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) {
-       new Delete_Student().setVisible(true);
+    private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
+        if (new Credential().user_type.equals("Admin")) {
+            new Delete_Student().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     //view student progress
-    private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        new Result_Sheet().setVisible(true);
+    private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
+         if (new Credential().user_type.equals("Admin")) {
+             new Result_Sheet().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws SQLException, ClassNotFoundException {
@@ -1035,52 +1061,46 @@ public class Students extends javax.swing.JFrame {
 
     //courses navigate
     private void courses_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
+
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();
             new Course().setVisible(true);
-        }
+
     }
 
     //tutors function
     private void tutors_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
+
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();
             new Tutors().setVisible(true);
-        }
     }
 
     //logout function
     private void calendar_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
+
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();
             new Students().setVisible(true);
-        }
+
     }
 
     //calendar navigate
     private void mail_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, URISyntaxException, IOException {
-        String user = "Admin";
-        if (user != "Student") {
+
             // open browser and link to mail
             desktop = Desktop.getDesktop();
             desktop.browse(new URI("https://gmail.com/"));
-        }
+
     }
 
     //setting navigate
     private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
+
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();
             new Setting().setVisible(true);
-        }
+
     }
 
     //logout navigate

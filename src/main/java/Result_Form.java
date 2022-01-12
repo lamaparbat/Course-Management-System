@@ -1,6 +1,8 @@
 
 import Backend.Instructor;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class Result_Form extends javax.swing.JFrame {
@@ -70,7 +72,13 @@ public class Result_Form extends javax.swing.JFrame {
         upload_result.setText("Upload Result");
         upload_result.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                upload_resultMouseClicked(evt);
+                try {
+                    upload_resultMouseClicked(evt);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Result_Form.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Result_Form.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 

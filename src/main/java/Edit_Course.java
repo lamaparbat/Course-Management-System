@@ -1,5 +1,6 @@
 
 import Backend.Admin;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,6 +87,8 @@ public class Edit_Course extends javax.swing.JFrame {
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Edit_Course.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
+                    Logger.getLogger(Edit_Course.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
                     Logger.getLogger(Edit_Course.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -195,7 +198,7 @@ public class Edit_Course extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void updateCourseMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
+    private void updateCourseMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
         int id = Integer.parseInt(cid.getText());
         int seat = Integer.parseInt(seats.getText());
         String name = cname.getText();
@@ -203,12 +206,14 @@ public class Edit_Course extends javax.swing.JFrame {
 
         //form validation
         if (id >= 0 && seat >= 0 && name.length() > 0 && batch_date.length() > 0) {
+
             //backend update course
             if (new Admin().updateCourse(id, name, batch_date, seat)) {
                 JOptionPane.showMessageDialog(null, "Course updated successfully!!");
             } else {
                 JOptionPane.showMessageDialog(null, "Course failed to update!!");
             }
+
         }
     }
 

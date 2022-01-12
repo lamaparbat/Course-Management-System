@@ -168,7 +168,6 @@ public class Admin extends User implements Activity {
         //check if insert success or not
         if (st.executeUpdate(query) > 0) {
             System.out.println("Course added successfully!");
-
             return true;
         } else {
             System.out.println("Course failed to add!");

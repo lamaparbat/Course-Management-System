@@ -1,21 +1,31 @@
 
+import Backend.Credential;
 import Backend.User;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
 import static java.awt.SystemColor.desktop;
 import java.awt.Window;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class Setting extends javax.swing.JFrame {
 
-    public Setting() {
+    //major attr
+    private String username_val, email_val, phone_val, date_val;
+    ArrayList<String> profile_data;
+
+    public Setting() throws FileNotFoundException, ClassNotFoundException, SQLException {
         initComponents();
+        setUserProfile();
     }
 
     @SuppressWarnings("unchecked")
@@ -677,26 +687,26 @@ public class Setting extends javax.swing.JFrame {
         jLabel2.setText("Username");
 
         username.setForeground(new java.awt.Color(65, 65, 65));
-        username.setText("  Parbat Lama");
+        username.setText("");
         username.setBorder(null);
         username.setFocusable(false);
 
         jLabel13.setText("Email");
 
         email.setForeground(new java.awt.Color(65, 65, 65));
-        email.setText("  parbatlama70@gmail.com");
+        email.setText("");
         email.setBorder(null);
         email.setFocusable(false);
 
         phone.setForeground(new java.awt.Color(65, 65, 65));
-        phone.setText("  9817324521");
+        phone.setText("");
         phone.setBorder(null);
         phone.setFocusable(false);
 
         jLabel20.setText("Phone No.");
 
         date.setForeground(new java.awt.Color(65, 65, 65));
-        date.setText("  2022-01-04");
+        date.setText("");
         date.setBorder(null);
         date.setFocusable(false);
 
@@ -708,20 +718,28 @@ public class Setting extends javax.swing.JFrame {
         jLabel11.setText("Old Password");
 
         old_password.setForeground(new java.awt.Color(65, 65, 65));
-        old_password.setText("  Parbat Lama");
+        old_password.setText("");
         old_password.setBorder(null);
 
         jLabel22.setText("New Password");
 
         new_password.setForeground(new java.awt.Color(65, 65, 65));
-        new_password.setText("  Parbat Lama");
+        new_password.setText("");
         new_password.setBorder(null);
 
         change_password_btn.setText("Change Password");
         change_password_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         change_password_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                change_password_btnMouseClicked(evt);
+                try {
+                    change_password_btnMouseClicked(evt);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -729,7 +747,15 @@ public class Setting extends javax.swing.JFrame {
         edit_profile_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         edit_profile_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                edit_profile_btnMouseClicked(evt);
+                try {
+                    edit_profile_btnMouseClicked(evt);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -845,6 +871,8 @@ public class Setting extends javax.swing.JFrame {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1080,12 +1108,75 @@ public class Setting extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    private void change_password_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+    //change user password
+    private void change_password_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
+        //initialize default field value
+        String old_password_val = old_password.getText();
+        String new_password_val = new_password.getText();
+
+        //change the field background 
+        old_password.setBackground(Color.LIGHT_GRAY);
+        new_password.setBackground(Color.LIGHT_GRAY);
+
+        //validation
+        if (old_password_val.length() > 0 && new_password_val.length() > 0) {
+
+            //backend
+            if (new User().changePassword(new Credential().user_type, new Credential().email, old_password_val, new_password_val)) {
+                JOptionPane.showMessageDialog(null, "Password Changed !!");
+                old_password.setText("");
+                new_password.setText("");
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to change password.", "500 ERROR !!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "User validation error.", "404 ERROR !!", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    private void edit_profile_btnMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+    //fill the default user form field
+    private void setUserProfile() throws FileNotFoundException, ClassNotFoundException, SQLException {
+        profile_data = new User().profileData(new Credential().user_type, new Credential().email);
+        username.setText("  " + profile_data.get(1));
+        email.setText("  " + profile_data.get(0));
+        phone.setText("  " + profile_data.get(2));
+        date.setText("  " + profile_data.get(3));
+    }
+
+    //edit profile
+    private void edit_profile_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
+        email.setFocusable(true);
+        email.setBackground(Color.LIGHT_GRAY);
+        username.setFocusable(true);
+        username.setBackground(Color.LIGHT_GRAY);
+        phone.setFocusable(true);
+        phone.setBackground(Color.LIGHT_GRAY);
+        date.setFocusable(true);
+        date.setBackground(Color.LIGHT_GRAY);
+
+        //prev inp data
+        username_val = username.getText().strip();
+        email_val = email.getText().strip();
+        phone_val = phone.getText().strip();
+        date_val = date.getText().strip();
+
+        //validation
+        if (username_val.equals(profile_data.get(1)) != true || email_val.equals(profile_data.get(0)) != true || phone_val.equals(profile_data.get(2)) != true || date_val.equals(profile_data.get(3)) != true) {
+            //backend data
+            if (new User().updateProfile(username_val, email_val, phone_val)) {
+                JOptionPane.showMessageDialog(null, "Profile Successfully updated !!");
+                //reset field value
+                username.setText("");
+                email.setText("");
+                phone.setText("");
+                date.setText("");
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Updation Error !!", "Failed to update.", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            System.out.println("Please enter new feild value!!");
+        }
     }
 
     //dashboard navigate
@@ -1097,52 +1188,47 @@ public class Setting extends javax.swing.JFrame {
 
     //courses navigate
     private void courses_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Course().setVisible(true);
-        }
+
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Course().setVisible(true);
+
     }
 
     //tutors function
     private void tutors_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Tutors().setVisible(true);
-        }
+
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Tutors().setVisible(true);
+
     }
 
     //logout function
     private void calendar_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Students().setVisible(true);
-        }
+
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Students().setVisible(true);
+
     }
 
     //calendar navigate
     private void mail_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, URISyntaxException, IOException {
-        String user = "Admin";
-        if (user != "Student") {
-            // open browser and link to mail
-            desktop = Desktop.getDesktop();
-            desktop.browse(new URI("https://gmail.com/"));
-        }
+
+        // open browser and link to mail
+        desktop = Desktop.getDesktop();
+        desktop.browse(new URI("https://gmail.com/"));
+
     }
 
     //setting navigate
-    private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
-        String user = "Admin";
-        if (user != "Student") {
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Setting().setVisible(true);
-        }
+    private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, FileNotFoundException {
+
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Setting().setVisible(true);
+
     }
 
     //logout navigate
@@ -1158,7 +1244,15 @@ public class Setting extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Setting().setVisible(true);
+                try {
+                    new Setting().setVisible(true);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

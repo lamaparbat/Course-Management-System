@@ -34,7 +34,6 @@ public class Course_Form extends javax.swing.JFrame{
 
     public Course_Form() {
         initComponents();
-        new Course_Form().setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -926,7 +925,6 @@ public class Course_Form extends javax.swing.JFrame{
             String history = "  Course: " + course_name_val + " recently Added.   Time:" + new Admin().cal.getTime();
             new Admin().addNewActivity(history);
             JOptionPane.showMessageDialog(null, "New Course uploaded successfully !!");
-            new Course_Form().setVisible(false);
         }else{
             JOptionPane.showMessageDialog(null, "Please fill the value carefully !!", "Failed to upload course !!", JOptionPane.ERROR_MESSAGE);
         }   
@@ -936,7 +934,7 @@ public class Course_Form extends javax.swing.JFrame{
     public static void main(String args[]) throws SQLException {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Course_Form();
+                new Course_Form().setVisible(true);
             }
         });
     }

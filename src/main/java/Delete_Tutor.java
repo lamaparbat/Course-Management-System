@@ -1,10 +1,10 @@
 
 import Backend.Admin;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
 
 public class Delete_Tutor extends javax.swing.JFrame {
 
@@ -63,6 +63,8 @@ public class Delete_Tutor extends javax.swing.JFrame {
                     Logger.getLogger(Delete_Course.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(Delete_Course.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Delete_Tutor.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -126,16 +128,15 @@ public class Delete_Tutor extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
-    private void deleteCourseMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
+    private void deleteCourseMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
         int iid = Integer.parseInt(tutor_id.getText());
-        JOptionPane.showMessageDialog(null, ""+iid);
-
-        //backend 
-        if(new Admin().deleteTutor(iid)){
-            JOptionPane.showMessageDialog(null, "Tutor deleted Successfully !!");
-        }else{
-            JOptionPane.showMessageDialog(null, "Please enter valid tutor ID ? ","Failed to delete !",JOptionPane.ERROR_MESSAGE);
-        }
+        JOptionPane.showMessageDialog(null, "" + iid);
+            //backend 
+            if (new Admin().deleteTutor(iid)) {
+                JOptionPane.showMessageDialog(null, "Tutor deleted Successfully !!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Please enter valid tutor ID ? ", "Failed to delete !", JOptionPane.ERROR_MESSAGE);
+            }
     }
 
     public static void main(String args[]) {
