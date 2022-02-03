@@ -10,6 +10,7 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Window;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
@@ -28,7 +29,10 @@ import javax.swing.table.JTableHeader;
 public final class Home extends javax.swing.JFrame {
 
     public Home() throws ClassNotFoundException, SQLException {
-        initComponents();
+        // default user authentication routing
+        authRoute();
+
+        //table config        
         activity_table.getColumnModel().getColumn(0).setPreferredWidth(30);
         activity_table.getColumnModel().getColumn(1).setPreferredWidth(700);
         activity_table.setBounds(0, 0, 600, 30);
@@ -38,6 +42,21 @@ public final class Home extends javax.swing.JFrame {
         activity_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         //fill the table rows
         addActivityTableRows();
+    }
+
+    private void authRoute() throws ClassNotFoundException, SQLException {
+        // create File instance                
+        File f = new File("credential.txt");
+
+        //check if file exist or not
+        if (f.exists() == false) {
+            this.setVisible(false);
+            this.dispose();
+            new Signup().setVisible(true);
+        } else {
+            // load the component        
+            initComponents();
+        }
     }
 
     private void initComponents() throws ClassNotFoundException, SQLException {
@@ -214,7 +233,7 @@ public final class Home extends javax.swing.JFrame {
                                         .addGap(0, 0, Short.MAX_VALUE)))
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         sidebar.setBackground(new java.awt.Color(102, 102, 102));
@@ -431,7 +450,11 @@ public final class Home extends javax.swing.JFrame {
         setting_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
-                    setting_navigate(evt);
+                    try {
+                        setting_navigate(evt);
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
@@ -1149,22 +1172,22 @@ public final class Home extends javax.swing.JFrame {
     //logout function
     private void calendar_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, FileNotFoundException {
 
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Students().setVisible(true);
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Students().setVisible(true);
     }
 
     //calendar navigate
     private void mail_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, URISyntaxException, IOException {
 
-            // open browser and link to mail
-            desktop = Desktop.getDesktop();
-            desktop.browse(new URI("https://gmail.com/"));
+        // open browser and link to mail
+        desktop = Desktop.getDesktop();
+        desktop.browse(new URI("https://gmail.com/"));
 
     }
 
     //setting navigate
-    private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
+    private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, FileNotFoundException {
         Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
         win.dispose();
         new Setting().setVisible(true);

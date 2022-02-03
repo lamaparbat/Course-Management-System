@@ -23,13 +23,13 @@ public class Setting extends javax.swing.JFrame {
     private String username_val, email_val, phone_val, date_val;
     ArrayList<String> profile_data;
 
+    //default constructor
     public Setting() throws FileNotFoundException, ClassNotFoundException, SQLException {
         initComponents();
         setUserProfile();
     }
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+          
+    //parameterized constructor
     private void initComponents() {
 
         sidebar = new javax.swing.JPanel();

@@ -387,6 +387,8 @@ public class Students extends javax.swing.JFrame {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Students.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1095,7 +1097,7 @@ public class Students extends javax.swing.JFrame {
     }
 
     //setting navigate
-    private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
+    private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, FileNotFoundException {
 
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
             win.dispose();

@@ -15,9 +15,9 @@ import javax.swing.JOptionPane;
 public class Admin extends User implements Activity {
 
     //required attr
-    ArrayList<String> activityList;
+    private ArrayList<String> activityList;
     //date objects
-    DateFormat dateFormat;
+    private DateFormat dateFormat;
     public Calendar cal;
 
     //constructor

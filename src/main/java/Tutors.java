@@ -377,7 +377,11 @@ public class Tutors extends javax.swing.JFrame {
         setting_btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
-                    setting_navigate(evt);
+                    try {
+                        setting_navigate(evt);
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
@@ -1091,7 +1095,7 @@ public class Tutors extends javax.swing.JFrame {
     }
 
     //setting navigate
-    private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
+    private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, FileNotFoundException {
         String user = "Admin";
         if (user != "Student") {
             Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());

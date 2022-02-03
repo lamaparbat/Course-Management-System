@@ -12,9 +12,9 @@ import java.util.ArrayList;
 
 public final class Student extends User{
     //major attr
-    int sid;
-    String name, email, date,phn, course_name;
-    ArrayList<Student> Student_Details;
+    private int sid;
+    private String name, email, date,phn, course_name;
+    private ArrayList<Student> Student_Details;
     ArrayList<String> student_name;
     
     //major report attr

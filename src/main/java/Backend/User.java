@@ -34,7 +34,7 @@ public class User {
     public User() throws ClassNotFoundException, SQLException {
         //db config init
         con = new DB_Connection().connect();
-        st = con.createStatement();
+         st = con.createStatement();
         //get current date   con = new DB_Connection().connect();
         today = LocalDate.now(ZoneId.of("Asia/Katmandu"));
         cur_date = today.toString();
