@@ -15,12 +15,12 @@ public final class Student extends User{
     private int sid;
     private String name, email, date,phn, course_name;
     private ArrayList<Student> Student_Details;
-    ArrayList<String> student_name;
+    private ArrayList<String> student_name;
     
     //major report attr
-    float percentage;
-    String grade_type, module_name;
-    float total_percentage = 0;
+    private float percentage;
+    private String grade_type, module_name;
+    private float total_percentage = 0;
     
     
     //default constructor
@@ -116,7 +116,6 @@ public final class Student extends User{
     
     //enroll course
     protected boolean enrollCourse(int course_id){
-        
         return true;
     }
     

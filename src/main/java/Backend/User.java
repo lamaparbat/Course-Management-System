@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -34,7 +33,7 @@ public class User {
     public User() throws ClassNotFoundException, SQLException {
         //db config init
         con = new DB_Connection().connect();
-         st = con.createStatement();
+        st = con.createStatement();
         //get current date   con = new DB_Connection().connect();
         today = LocalDate.now(ZoneId.of("Asia/Katmandu"));
         cur_date = today.toString();
@@ -52,12 +51,8 @@ public class User {
     public boolean login(String login_mode, String email_val, String password_val) throws ClassNotFoundException, SQLException, FileNotFoundException, IOException {
         System.out.println("Database Connected successfully !!");
 
-        //database query
-        query = "SELECT * FROM " + login_mode + " WHERE email='" + email_val + "' AND password='" + password_val + "'";
-        rs = st.executeQuery(query);
-
-        //check login status -> success || failed
-        if (rs.next()) {
+        //check if user already log in or not
+        if (new Credential().saveInfo(email, login_mode)) {
             //show error popup modal for 4 seconds using Timer class
             JOptionPane successModal = new JOptionPane();
             Timer t = new Timer(4000, new ActionListener() {
@@ -69,33 +64,53 @@ public class User {
             Icon icon = new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/logo.png");
             successModal.showMessageDialog(null, "Welcome to Course Management System", "Login Successfull !!", JOptionPane.INFORMATION_MESSAGE, icon);
             t.stop();
-            
-            //save data to file
-            FileWriter file = new FileWriter("credential.txt");
-            file.write(email_val+"\n");
-            file.write(login_mode);
-            file.close();
-            
+
             //update activity table
             String history = login_mode + ": " + email_val + " recently logged in.   Time:" + new Admin().cal.getTime();
             new Admin().addNewActivity(history);
-            
+
             //return true on matching
             return true;
         } else {
-            //show error popup modal for 4 seconds using Timer 
-            JOptionPane errorModal = new JOptionPane();
-            Timer t = new Timer(4000, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    errorModal.getRootFrame().dispose();
-                }
-            });
-            t.start();
-            errorModal.showMessageDialog(null, "Please enter correct email or password", "Failed to Login!!", JOptionPane.ERROR_MESSAGE);
-            t.stop();
+            //database query
+            query = "SELECT * FROM " + login_mode + " WHERE email='" + email_val + "' AND password='" + password_val + "'";
+            rs = st.executeQuery(query);
 
-            //return if not matched
-            return false;
+            //check login status -> success || failed
+            if (rs.next()) {
+                //show error popup modal for 4 seconds using Timer class
+                JOptionPane successModal = new JOptionPane();
+                Timer t = new Timer(4000, new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        successModal.getRootFrame().dispose();
+                    }
+                });
+                t.start();
+                Icon icon = new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/logo.png");
+                successModal.showMessageDialog(null, "Welcome to Course Management System", "Login Successfull !!", JOptionPane.INFORMATION_MESSAGE, icon);
+                t.stop();
+
+                //update activity table
+                String history = login_mode + ": " + email_val + " recently logged in.   Time:" + new Admin().cal.getTime();
+                new Admin().addNewActivity(history);
+
+                //return true on matching
+                return true;
+            } else {
+                //show error popup modal for 4 seconds using Timer 
+                JOptionPane errorModal = new JOptionPane();
+                Timer t = new Timer(4000, new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        errorModal.getRootFrame().dispose();
+                    }
+                });
+                t.start();
+                errorModal.showMessageDialog(null, "Please enter correct email or password", "Failed to Login!!", JOptionPane.ERROR_MESSAGE);
+                t.stop();
+
+                //return if not matched
+                return false;
+            }
         }
 
     }
@@ -117,7 +132,7 @@ public class User {
     }
 
     //create new user
-    public boolean createAccount(String username, String email, String password, String phone, String mode, String selected_course_name) throws SQLException, ClassNotFoundException {
+    public boolean createAccount(String username, String email, String password, String phone, String mode, String selected_course_name) throws SQLException, ClassNotFoundException, IOException {
         if (isUserExist(email, mode)) {
             //popup error message
             JOptionPane.showMessageDialog(null, "User already exists !!", null, JOptionPane.ERROR_MESSAGE);
@@ -135,6 +150,10 @@ public class User {
                 new Admin().addNewActivity(history);
                 //pop success message
                 JOptionPane.showMessageDialog(null, "User created successfully !!", null, JOptionPane.INFORMATION_MESSAGE);
+                
+                //save the data to user local file
+                new Credential().saveInfo(email, mode);
+                
                 return true;
             } else {
                 JOptionPane.showMessageDialog(null, "Failed to create a user !!", "404 SERVER ERROR!!", JOptionPane.ERROR_MESSAGE);
@@ -142,49 +161,50 @@ public class User {
             }
         }
     }
-    
+
     //logout
     public boolean logout() {
         File file = new File("Credential.txt");
-        if(file.delete()){
+        if (file.delete()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    
+
     //update profile
-    public boolean updateProfile(String username,String email, String phone) throws FileNotFoundException, SQLException{
+    public boolean updateProfile(String username, String email, String phone) throws FileNotFoundException, SQLException, IOException {
         //db query
-        query = "UPDATE "+new Credential().user_type+" SET username='"+username+"', email='"+email+"', phone='"+phone+"' WHERE email='"+email+"'";
-        if(st.executeUpdate(query)>0){
+        query = "UPDATE " + new Credential().getUserType() + " SET username='" + username + "', email='" + email + "', phone='" + phone + "' WHERE email='" + email + "'";
+        if (st.executeUpdate(query) > 0) {
+            new Credential().updateInfo(email);
             return true;
         }
-        
+
         return false;
     }
-    
+
     //get profile data
-    public ArrayList<String> profileData(String user_type,String email) throws SQLException{
-         ArrayList<String> data = new  ArrayList<String>();
-         //DB query
-         query = "SELECT * FROM "+user_type+" WHERE email='"+email+"'";
-         rs = st.executeQuery(query);
-         while(rs.next()){
-             data.add(rs.getString("email"));
-             data.add(rs.getString("username"));
-             data.add(rs.getString("phone"));
-             data.add(rs.getString("date"));
-             data.add(rs.getString("password"));
-         }
-         
-         return data;
+    public ArrayList<String> profileData(String user_type, String email) throws SQLException {
+        ArrayList<String> data = new ArrayList<>();
+        //DB query
+        query = "SELECT * FROM " + user_type + " WHERE email='" + email + "'";
+        rs = st.executeQuery(query);
+        while (rs.next()) {
+            data.add(rs.getString("email"));
+            data.add(rs.getString("username"));
+            data.add(rs.getString("phone"));
+            data.add(rs.getString("date"));
+            data.add(rs.getString("password"));
+        }
+
+        return data;
     }
-    
+
     //change password
-    public boolean changePassword(String user_type,String email, String old_password, String new_password) throws SQLException{
-        query = "UPDATE "+user_type+" SET password='"+new_password+"' WHERE email='"+email+"' AND password = '"+old_password+"'";
-        if(st.executeUpdate(query)>0){
+    public boolean changePassword(String user_type, String email, String old_password, String new_password) throws SQLException {
+        query = "UPDATE " + user_type + " SET password='" + new_password + "' WHERE email='" + email + "' AND password = '" + old_password + "'";
+        if (st.executeUpdate(query) > 0) {
             System.out.println("Password successfully updated !!");
             return true;
         }

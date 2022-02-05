@@ -6,8 +6,8 @@ import java.util.ArrayList;
 public final class Instructor extends User {
 
     //tutor name list
-    ArrayList<Instructor> tutor_list = new ArrayList<>();
-    ArrayList<String> tutor_name_list = new ArrayList<>();
+    private ArrayList<Instructor> tutor_list = new ArrayList<>();
+    private ArrayList<String> tutor_name_list = new ArrayList<>();
 
     //default constructor
     public Instructor() throws SQLException, ClassNotFoundException {

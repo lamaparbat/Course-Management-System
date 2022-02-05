@@ -12,13 +12,13 @@ public class Course_Backend {
     private ArrayList<Course_Backend> course_details;
     private ArrayList<String> course_name;
 
-    int cid, seats, years;
-    protected String cname, batch;
+    private int cid, seats, years;
+    private String cname, batch;
     //DB config
-    Connection con;
-    String query;
-    Statement st;
-    ResultSet rs;
+    private Connection con;
+    private String query;
+    private Statement st;
+    private ResultSet rs;
 
     //default constructor
     public Course_Backend() throws ClassNotFoundException, SQLException {
@@ -72,6 +72,7 @@ public class Course_Backend {
         return batch;
     }
     
+    //get years
     public int getYears(Course_Backend obj){
         this.years = obj.years;
         return years;
@@ -98,9 +99,7 @@ public class Course_Backend {
 
         return course_details;
     }
-
-
-    
+ 
     //search course
     public ArrayList<Course_Backend> searchCourse(String keyword) throws SQLException{
         ArrayList<Course_Backend> result = new ArrayList<>();

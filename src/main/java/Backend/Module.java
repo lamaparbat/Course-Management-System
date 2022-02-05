@@ -1,7 +1,7 @@
 package Backend;
 
 public class Module extends User{
-    String tutors;
+    protected String tutors;
     
    //parameterized constructor
     public Module(String name, String tutors, String date, int course_years){
