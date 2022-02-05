@@ -2,12 +2,15 @@
 import Backend.Credential;
 import Backend.Student;
 import com.mysql.cj.util.StringUtils;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 public class Result_Sheet extends javax.swing.JFrame {
@@ -44,10 +47,9 @@ public class Result_Sheet extends javax.swing.JFrame {
             search_inp.setText(String.valueOf(new Credential().getId()));
             search_inp.disable();
             // auto fill the table row data -> progress report
-            autoFillReport();
-
+            search_inpKeyReleased();
         }
-        
+
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/report1.png")); // NOI18N
@@ -129,7 +131,7 @@ public class Result_Sheet extends javax.swing.JFrame {
         search_inp.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 try {
-                    search_inpKeyReleased(evt);
+                    search_inpKeyReleased();
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Result_Sheet.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
@@ -253,50 +255,12 @@ public class Result_Sheet extends javax.swing.JFrame {
             course_name.setText("");
         }
     }
-    
-    //auto fill the report table row
-    private void autoFillReport() throws ClassNotFoundException, SQLException, FileNotFoundException{
-        try {
-                DefaultTableModel model = (DefaultTableModel) report_table.getModel();
-                model.setRowCount(0);
-                Object[] row = new Object[5];
-                int id =new Credential().getId();
 
-                //send keyword to backend
-                ArrayList<Student> student_details = new Student().searchStudent(id);
-                ArrayList<Student> module_result_list = new Student().getProgressReport(id);
-
-                //report description
-                if (student_details.size() > 0) {
-                    name_val.setText(new Student().getStudentName(student_details.get(0)));
-                    course_name.setText(new Student().getCourseName(student_details.get(0)));
-                }
-                
-
-                if (module_result_list.size() > 0) {
-                    for (Student i : module_result_list) {
-                        //fill table
-                        row[0] = i.getStudentId(i);
-                        row[1] = i.getStudentName(i);
-                        row[2] = i.getModuleName(i);
-                        row[3] = i.getPercentage(i);
-                        row[4] = i.getGrade(i);
-
-                        //append data row to table
-                        model.addRow(row);
-                    }
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Wrong data type input. Integer expect!");
-            }
-    }    
-    
     // search the report on key presss    
-    private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
+    private void search_inpKeyReleased() throws ClassNotFoundException, SQLException, FileNotFoundException {
         if (new Credential().getMode().equals("Student") != true) {
             try {
                 DefaultTableModel model = (DefaultTableModel) report_table.getModel();
-                model.setRowCount(0);
                 Object[] row = new Object[5];
                 int id = Integer.parseInt(search_inp.getText());
 
@@ -322,6 +286,40 @@ public class Result_Sheet extends javax.swing.JFrame {
                         //append data row to table
                         model.addRow(row);
                     }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Wrong data type input. Integer expect!");
+            }
+        } else {
+            try {
+                DefaultTableModel model = (DefaultTableModel) report_table.getModel();
+                Object[] row = new Object[5];
+                int id = new Credential().getId();
+
+                //send keyword to backend
+                ArrayList<Student> student_details = new Student().searchStudent(id);
+                ArrayList<Student> module_result_list = new Student().getProgressReport(id);
+
+                //report description
+                if (student_details.size() > 0) {
+                    name_val.setText(new Student().getStudentName(student_details.get(0)));
+                    course_name.setText(new Student().getCourseName(student_details.get(0)));
+                }
+
+                if (module_result_list.size() > 0) {
+                    for (Student i : module_result_list) {
+                        //fill table
+                        row[0] = i.getStudentId(i);
+                        row[1] = i.getStudentName(i);
+                        row[2] = i.getModuleName(i);
+                        row[3] = i.getPercentage(i);
+                        row[4] = i.getGrade(i);
+
+                        //append data row to table
+                        model.addRow(row);
+                    }
+                    
+//                   Refres the table rows                
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Wrong data type input. Integer expect!");
