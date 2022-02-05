@@ -7,80 +7,76 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public class Credential {
-    public String email, user_type;
-    File file;
-    FileWriter fw;
-    Scanner sc;
-    ArrayList<String> data;
-    
-    public Credential() throws IOException{
+
+    private String email, user_type;
+    private File file;
+    private Scanner sc;
+    private ArrayList<String> data;
+
+    public Credential() throws FileNotFoundException {
         //accessing file
         file = new File("credential.txt");
-        fw = new FileWriter("credential.txt");
-    }
-    
-    //save login data to local file        
-    public Boolean checkInfo(String l_email, String l_user_mode) throws FileNotFoundException{
+
         //list to store file data
         data = new ArrayList<>();
-        
+
         //check if file exist or not
-        if(file.exists()){
-            //reading file
-            sc = new Scanner(file);
-            
-            //iterating each line
-            while(sc.hasNextLine()){
-                data.add(sc.nextLine());
+        if (file.exists()) {
+            if (this.isEmpty() != true) {
+                //reading file
+                sc = new Scanner(file);
+
+                //iterating each line
+                while (sc.hasNextLine()) {
+                    data.add(sc.nextLine());
+                }
+
+                //initializing file value to global variable
+                email = data.get(0);
+                user_type = data.get(1);
             }
-            
-            //initializing file value to global variable
-            email = data.get(0);
-            user_type = data.get(1);
-            
-            if(l_email.equals(email) && l_user_mode == user_type){
-                return true;
-            }else{
-                return false;
-            }
-        }else{
+        } else {
             System.out.println("File doesnt exist!");
+        }
+    }
+
+    //return user email
+    public String getEmail() {
+        return this.email;
+    }
+
+    //return user mode
+    public String getMode() {
+        return this.user_type;
+    }
+
+    // return is there any data
+    public boolean isEmpty() {
+        if (file.length() == 0) {
+            return true;
+        } else {
             return false;
         }
     }
     
-    public void saveInfo(String email, String user_type) throws IOException{
-      //write the login data to local file
-      fw.write(email);
-      fw.write(user_type);
-      
-      //close the file
-      fw.close();      
+    //store user data
+    public void storeData(String email, String mode) throws IOException{
+        FileWriter fw = new FileWriter("Credential.txt");
+        fw.write(email);
+        fw.write(mode);
     }
     
-    //update info when user update 
+    //update the file data
     public void updateInfo(String email) throws IOException{
-      String utype = this.user_type;
-      
-      // delete the existing file
-      file.delete();
-      
-      //again create new file
-      FileWriter fw = new FileWriter("credential.txt");
-       
-      //write the login data to local file
-      fw.write(email);
-      fw.write(utype);
-      
-      //close the file
-      fw.close();     
+        String mode = this.user_type;
+        
+        //delete the file
+        if(file.delete()){
+            FileWriter fw = new FileWriter("Credential.txt");
+            fw.write(mode);
+            fw.write(email);
+            fw.close();
+        }
     }
-    
-    //return the current login user type
-    public String getUserType(){
-        return this.user_type;
-    }
-    
 }

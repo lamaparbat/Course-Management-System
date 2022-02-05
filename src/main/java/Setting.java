@@ -755,6 +755,8 @@ public class Setting extends javax.swing.JFrame {
                     Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -807,6 +809,8 @@ public class Setting extends javax.swing.JFrame {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1122,7 +1126,7 @@ public class Setting extends javax.swing.JFrame {
         if (old_password_val.length() > 0 && new_password_val.length() > 0) {
 
             //backend
-            if (new User().changePassword(new Credential().user_type, new Credential().email, old_password_val, new_password_val)) {
+            if (new User().changePassword(new Credential().getMode(), new Credential().getEmail(), old_password_val, new_password_val)) {
                 JOptionPane.showMessageDialog(null, "Password Changed !!");
                 old_password.setText("");
                 new_password.setText("");
@@ -1136,7 +1140,7 @@ public class Setting extends javax.swing.JFrame {
 
     //fill the default user form field
     private void setUserProfile() throws FileNotFoundException, ClassNotFoundException, SQLException {
-        profile_data = new User().profileData(new Credential().user_type, new Credential().email);
+        profile_data = new User().profileData(new Credential().getMode(), new Credential().getEmail());
         username.setText("  " + profile_data.get(1));
         email.setText("  " + profile_data.get(0));
         phone.setText("  " + profile_data.get(2));
@@ -1144,7 +1148,7 @@ public class Setting extends javax.swing.JFrame {
     }
 
     //edit profile
-    private void edit_profile_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
+    private void edit_profile_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException, IOException {
         email.setFocusable(true);
         email.setBackground(Color.LIGHT_GRAY);
         username.setFocusable(true);
@@ -1180,7 +1184,7 @@ public class Setting extends javax.swing.JFrame {
     }
 
     //dashboard navigate
-    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
+    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, IOException {
         Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
         win.dispose();
         new Home().setVisible(true);

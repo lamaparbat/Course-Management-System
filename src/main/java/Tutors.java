@@ -318,6 +318,8 @@ public class Tutors extends javax.swing.JFrame {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Tutors.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1015,7 +1017,7 @@ public class Tutors extends javax.swing.JFrame {
     }// </editor-fold>                        
 
     private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
-        if (new Credential().user_type.equals("Admin")) {
+        if (new Credential().getMode().equals("Admin")) {
             new Signup().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
@@ -1025,7 +1027,7 @@ public class Tutors extends javax.swing.JFrame {
 
     private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
         
-        if (new Credential().user_type.equals("Admin")) {
+        if (new Credential().getMode().equals("Admin")) {
             new Edit_Tutor().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
@@ -1033,7 +1035,7 @@ public class Tutors extends javax.swing.JFrame {
     }
 
     private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
-        if (new Credential().user_type.equals("Admin")) {
+        if (new Credential().getMode().equals("Admin")) {
            new Delete_Tutor().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
@@ -1048,7 +1050,7 @@ public class Tutors extends javax.swing.JFrame {
     }
 
     //dashboard navigate
-    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
+    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, IOException {
         Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
         win.dispose();
         new Home().setVisible(true);

@@ -204,7 +204,8 @@ public class Login extends javax.swing.JFrame {
         // assigning input value to glob variable
         String email_val = email.getText();
         String password_val = password.getText();
-        if (login_mode != "Select user mode" && email_val != "Enter email" && password_val != "password") {
+        
+        if (!"Select user mode".equals(login_mode) && !"Enter email".equals(email_val) && !"password".equals(password_val)) {
             //condition for empty field rejection
             if (email_val.length() > 0 && password_val.length() > 0 && login_mode.length() > 0) {
                 //backend login fucntionality
@@ -213,6 +214,7 @@ public class Login extends javax.swing.JFrame {
                     //dispose the current login panel
                     this.dispose();
                     //open home page
+                    System.out.println("working");
                     new Home().setVisible(true);
                 }
             }

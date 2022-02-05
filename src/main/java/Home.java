@@ -1,6 +1,7 @@
 
 import Backend.Admin;
 import Backend.Course_Backend;
+import Backend.Credential;
 import Backend.Instructor;
 import Backend.Student;
 import Backend.User;
@@ -28,7 +29,7 @@ import javax.swing.table.JTableHeader;
 
 public final class Home extends javax.swing.JFrame {
 
-    public Home() throws ClassNotFoundException, SQLException {
+    public Home() throws ClassNotFoundException, SQLException, IOException {
         // default user authentication routing
         authRoute();
 
@@ -44,12 +45,9 @@ public final class Home extends javax.swing.JFrame {
         addActivityTableRows();
     }
 
-    private void authRoute() throws ClassNotFoundException, SQLException {
-        // create File instance                
-        File f = new File("credential.txt");
-
+    private void authRoute() throws ClassNotFoundException, SQLException, IOException {
         //check if file exist or not
-        if (f.exists() == false) {
+        if (new Credential().isEmpty() != true) {
             this.setVisible(false);
             this.dispose();
             new Signup().setVisible(true);
@@ -388,6 +386,8 @@ public final class Home extends javax.swing.JFrame {
                 } catch (SQLException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -1149,7 +1149,7 @@ public final class Home extends javax.swing.JFrame {
     }
 
     //dashboard navigate
-    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
+    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, IOException {
         Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
         win.dispose();
         new Home().setVisible(true);
@@ -1222,6 +1222,8 @@ public final class Home extends javax.swing.JFrame {
             try {
                 new Home().setVisible(true);
             } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
                 Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
             }
         });

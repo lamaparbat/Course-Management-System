@@ -323,6 +323,8 @@ public class Students extends javax.swing.JFrame {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Students.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1021,7 +1023,7 @@ public class Students extends javax.swing.JFrame {
 
     //edit student
     private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
-        if (new Credential().user_type.equals("Admin")) {
+        if (new Credential().getMode().equals("Admin")) {
             new Edit_Student().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
@@ -1031,7 +1033,7 @@ public class Students extends javax.swing.JFrame {
 
     //delete student
     private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
-        if (new Credential().user_type.equals("Admin")) {
+        if (new Credential().getMode().equals("Admin")) {
             new Delete_Student().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
@@ -1040,7 +1042,7 @@ public class Students extends javax.swing.JFrame {
 
     //view student progress
     private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
-         if (new Credential().user_type.equals("Admin")) {
+         if (new Credential().getMode().equals("Admin")) {
              new Result_Sheet().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
@@ -1055,7 +1057,7 @@ public class Students extends javax.swing.JFrame {
     }
 
     //dashboard navigate
-    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
+    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, IOException {
         Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
         win.dispose();
         new Home().setVisible(true);

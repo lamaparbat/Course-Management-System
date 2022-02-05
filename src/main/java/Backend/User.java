@@ -52,7 +52,7 @@ public class User {
         System.out.println("Database Connected successfully !!");
 
         //check if user already log in or not
-        if (new Credential().saveInfo(email, login_mode)) {
+        if (new Credential().getEmail() == email_val && new Credential().getMode() == login_mode) {
             //show error popup modal for 4 seconds using Timer class
             JOptionPane successModal = new JOptionPane();
             Timer t = new Timer(4000, new ActionListener() {
@@ -78,6 +78,9 @@ public class User {
 
             //check login status -> success || failed
             if (rs.next()) {
+                // store userdata
+                new Credential().storeData(email_val, login_mode);
+
                 //show error popup modal for 4 seconds using Timer class
                 JOptionPane successModal = new JOptionPane();
                 Timer t = new Timer(4000, new ActionListener() {
@@ -89,7 +92,7 @@ public class User {
                 Icon icon = new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/logo.png");
                 successModal.showMessageDialog(null, "Welcome to Course Management System", "Login Successfull !!", JOptionPane.INFORMATION_MESSAGE, icon);
                 t.stop();
-
+              
                 //update activity table
                 String history = login_mode + ": " + email_val + " recently logged in.   Time:" + new Admin().cal.getTime();
                 new Admin().addNewActivity(history);
@@ -152,7 +155,7 @@ public class User {
                 JOptionPane.showMessageDialog(null, "User created successfully !!", null, JOptionPane.INFORMATION_MESSAGE);
                 
                 //save the data to user local file
-                new Credential().saveInfo(email, mode);
+                new Credential().storeData(email, mode);
                 
                 return true;
             } else {
@@ -175,7 +178,7 @@ public class User {
     //update profile
     public boolean updateProfile(String username, String email, String phone) throws FileNotFoundException, SQLException, IOException {
         //db query
-        query = "UPDATE " + new Credential().getUserType() + " SET username='" + username + "', email='" + email + "', phone='" + phone + "' WHERE email='" + email + "'";
+        query = "UPDATE " + new Credential().getMode()+ " SET username='" + username + "', email='" + email + "', phone='" + phone + "' WHERE email='" + email + "'";
         if (st.executeUpdate(query) > 0) {
             new Credential().updateInfo(email);
             return true;

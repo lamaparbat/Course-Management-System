@@ -313,6 +313,8 @@ public class Course extends javax.swing.JFrame {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Course.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1005,8 +1007,8 @@ public class Course extends javax.swing.JFrame {
     }// </editor-fold>                        
 
     private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
-        System.out.println(new Credential().user_type.equals("Admin"));
-        if (new Credential().user_type.equals("Admin")) {
+        System.out.println(new Credential().getMode().equals("Admin"));
+        if (new Credential().getMode().equals("Admin")) {
             new Course_Form().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
@@ -1016,7 +1018,7 @@ public class Course extends javax.swing.JFrame {
 
     private void edit_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
 
-        if (new Credential().user_type.equals("Admin")) {
+        if (new Credential().getMode().equals("Admin")) {
             new Edit_Course().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
@@ -1025,7 +1027,7 @@ public class Course extends javax.swing.JFrame {
 
     private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
 
-        if (new Credential().user_type.equals("Admin")) {
+        if (new Credential().getMode().equals("Admin")) {
             new Delete_Course().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
@@ -1040,7 +1042,7 @@ public class Course extends javax.swing.JFrame {
     }
 
     //dashboard navigate
-    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
+    private void dashboard_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, IOException {
         Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
         win.dispose();
         new Home().setVisible(true);
