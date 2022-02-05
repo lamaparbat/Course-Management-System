@@ -1007,7 +1007,7 @@ public class Course extends javax.swing.JFrame {
     }// </editor-fold>                        
 
     private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
-        System.out.println(new Credential().getMode().equals("Admin"));
+        System.out.println(new Credential().getMode());
         if (new Credential().getMode().equals("Admin")) {
             new Course_Form().setVisible(true);
         } else {

@@ -47,7 +47,7 @@ public final class Home extends javax.swing.JFrame {
 
     private void authRoute() throws ClassNotFoundException, SQLException, IOException {
         //check if file exist or not
-        if (new Credential().isEmpty() != true) {
+        if (new Credential().isEmpty() == true) {
             this.setVisible(false);
             this.dispose();
             new Signup().setVisible(true);

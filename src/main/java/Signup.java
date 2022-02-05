@@ -2,6 +2,7 @@
 import Backend.Admin;
 import Backend.Course_Backend;
 import Backend.User;
+import java.io.IOException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -74,6 +75,8 @@ public class Signup extends javax.swing.JFrame {
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
+                    Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
                     Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -289,7 +292,7 @@ public class Signup extends javax.swing.JFrame {
     }
 
     //create_btn clicked
-    private void createMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException {
+    private void createMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, IOException {
         //store the input value         
         String username_val = username.getText();
         String email_val = email.getText();

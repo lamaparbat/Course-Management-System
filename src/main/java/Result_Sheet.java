@@ -1,7 +1,9 @@
 
+import Backend.Credential;
 import Backend.Student;
 import com.mysql.cj.util.StringUtils;
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -10,14 +12,14 @@ import javax.swing.table.DefaultTableModel;
 
 public class Result_Sheet extends javax.swing.JFrame {
 
-    public Result_Sheet() {
+    public Result_Sheet() throws FileNotFoundException, ClassNotFoundException, SQLException {
         initComponents();
         this.setLocationRelativeTo(null);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
+    private void initComponents() throws FileNotFoundException, ClassNotFoundException, SQLException {
 
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -37,7 +39,15 @@ public class Result_Sheet extends javax.swing.JFrame {
         search_inp = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        if (new Credential().getMode().equals("Student")) {
+            //auto fill the progress result search keyword
+            search_inp.setText(String.valueOf(new Credential().getId()));
+            search_inp.disable();
+            // auto fill the table row data -> progress report
+            autoFillReport();
 
+        }
+        
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setIcon(new javax.swing.ImageIcon("/Users/parbatlama/Pictures/icons/report1.png")); // NOI18N
@@ -124,12 +134,15 @@ public class Result_Sheet extends javax.swing.JFrame {
                     Logger.getLogger(Result_Sheet.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(Result_Sheet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Result_Sheet.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 search_keyPressed(evt);
             }
-            
+
         });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -231,57 +244,103 @@ public class Result_Sheet extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>                        
-    
+
     //on backspace key pressed
     public void search_keyPressed(KeyEvent e) {
         // Invoked when a key has been pressed.
         if (e.getKeyCode() == 8) {
-           name_val.setText("");
+            name_val.setText("");
             course_name.setText("");
-            System.out.println("cancel");
         }
     }
-
     
-    private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws ClassNotFoundException, SQLException {
+    //auto fill the report table row
+    private void autoFillReport() throws ClassNotFoundException, SQLException, FileNotFoundException{
         try {
-            DefaultTableModel model = (DefaultTableModel) report_table.getModel();
-            model.setRowCount(0);
-            Object[] row = new Object[5];
-            int id = Integer.parseInt(search_inp.getText());
+                DefaultTableModel model = (DefaultTableModel) report_table.getModel();
+                model.setRowCount(0);
+                Object[] row = new Object[5];
+                int id =new Credential().getId();
 
-            //send keyword to backend
-            ArrayList<Student> student_details = new Student().searchStudent(id);
-            ArrayList<Student> module_result_list = new Student().getProgressReport(id);
+                //send keyword to backend
+                ArrayList<Student> student_details = new Student().searchStudent(id);
+                ArrayList<Student> module_result_list = new Student().getProgressReport(id);
 
-            //report description
-            if (student_details.size() > 0) {
-                name_val.setText(new Student().getStudentName(student_details.get(0)));
-                course_name.setText(new Student().getCourseName(student_details.get(0)));
-            }
-
-            if (module_result_list.size() > 0) {
-                for (Student i : module_result_list) {
-                    //fill table
-                    row[0] = i.getStudentId(i);
-                    row[1] = i.getStudentName(i);
-                    row[2] = i.getModuleName(i);
-                    row[3] = i.getPercentage(i);
-                    row[4] = i.getGrade(i);
-
-                    //append data row to table
-                    model.addRow(row);
+                //report description
+                if (student_details.size() > 0) {
+                    name_val.setText(new Student().getStudentName(student_details.get(0)));
+                    course_name.setText(new Student().getCourseName(student_details.get(0)));
                 }
+                
+
+                if (module_result_list.size() > 0) {
+                    for (Student i : module_result_list) {
+                        //fill table
+                        row[0] = i.getStudentId(i);
+                        row[1] = i.getStudentName(i);
+                        row[2] = i.getModuleName(i);
+                        row[3] = i.getPercentage(i);
+                        row[4] = i.getGrade(i);
+
+                        //append data row to table
+                        model.addRow(row);
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Wrong data type input. Integer expect!");
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Wrong data type input. Integer expect!");
+    }    
+    
+    // search the report on key presss    
+    private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
+        if (new Credential().getMode().equals("Student") != true) {
+            try {
+                DefaultTableModel model = (DefaultTableModel) report_table.getModel();
+                model.setRowCount(0);
+                Object[] row = new Object[5];
+                int id = Integer.parseInt(search_inp.getText());
+
+                //send keyword to backend
+                ArrayList<Student> student_details = new Student().searchStudent(id);
+                ArrayList<Student> module_result_list = new Student().getProgressReport(id);
+
+                //report description
+                if (student_details.size() > 0) {
+                    name_val.setText(new Student().getStudentName(student_details.get(0)));
+                    course_name.setText(new Student().getCourseName(student_details.get(0)));
+                }
+
+                if (module_result_list.size() > 0) {
+                    for (Student i : module_result_list) {
+                        //fill table
+                        row[0] = i.getStudentId(i);
+                        row[1] = i.getStudentName(i);
+                        row[2] = i.getModuleName(i);
+                        row[3] = i.getPercentage(i);
+                        row[4] = i.getGrade(i);
+
+                        //append data row to table
+                        model.addRow(row);
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Wrong data type input. Integer expect!");
+            }
         }
     }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Result_Sheet().setVisible(true);
+                try {
+                    new Result_Sheet().setVisible(true);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Result_Sheet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Result_Sheet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Result_Sheet.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

@@ -79,7 +79,13 @@ public class User {
             //check login status -> success || failed
             if (rs.next()) {
                 // store userdata
-                new Credential().storeData(email_val, login_mode);
+               if(login_mode.equals("Admin")){
+                    new Credential().storeData(rs.getInt("aid"),email_val, login_mode);
+               }else if(login_mode.equals("Student")){
+                    new Credential().storeData(rs.getInt("sid"),email_val, login_mode);
+               }else{
+                    new Credential().storeData(rs.getInt("iid"),email_val, login_mode);
+               }
 
                 //show error popup modal for 4 seconds using Timer class
                 JOptionPane successModal = new JOptionPane();
@@ -155,7 +161,7 @@ public class User {
                 JOptionPane.showMessageDialog(null, "User created successfully !!", null, JOptionPane.INFORMATION_MESSAGE);
                 
                 //save the data to user local file
-                new Credential().storeData(email, mode);
+                new Credential().storeData(0,email, mode);
                 
                 return true;
             } else {

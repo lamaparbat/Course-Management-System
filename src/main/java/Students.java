@@ -867,6 +867,10 @@ public class Students extends javax.swing.JFrame {
                     delete_btnMouseClicked(evt);
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(Students.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Students.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Students.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1023,6 +1027,7 @@ public class Students extends javax.swing.JFrame {
 
     //edit student
     private void add_btnMouseClicked(java.awt.event.MouseEvent evt) throws ClassNotFoundException, SQLException, FileNotFoundException {
+        System.out.println("Testing: " + new Credential().getMode());
         if (new Credential().getMode().equals("Admin")) {
             new Edit_Student().setVisible(true);
         } else {
@@ -1041,12 +1046,8 @@ public class Students extends javax.swing.JFrame {
     }
 
     //view student progress
-    private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException {
-         if (new Credential().getMode().equals("Admin")) {
-             new Result_Sheet().setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, "404 ACCESS DENIED !!", "You are failed to access this page.", JOptionPane.ERROR_MESSAGE);
-        }
+    private void delete_btnMouseClicked(java.awt.event.MouseEvent evt) throws FileNotFoundException, ClassNotFoundException, SQLException {
+        new Result_Sheet().setVisible(true);
     }
 
     private void search_inpKeyReleased(java.awt.event.KeyEvent evt) throws SQLException, ClassNotFoundException {
@@ -1066,44 +1067,44 @@ public class Students extends javax.swing.JFrame {
     //courses navigate
     private void courses_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
 
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Course().setVisible(true);
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Course().setVisible(true);
 
     }
 
     //tutors function
     private void tutors_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
 
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Tutors().setVisible(true);
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Tutors().setVisible(true);
     }
 
     //logout function
     private void calendar_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException {
 
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Students().setVisible(true);
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Students().setVisible(true);
 
     }
 
     //calendar navigate
     private void mail_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, URISyntaxException, IOException {
 
-            // open browser and link to mail
-            desktop = Desktop.getDesktop();
-            desktop.browse(new URI("https://gmail.com/"));
+        // open browser and link to mail
+        desktop = Desktop.getDesktop();
+        desktop.browse(new URI("https://gmail.com/"));
 
     }
 
     //setting navigate
     private void setting_navigate(java.awt.event.MouseEvent evt) throws SQLException, ClassNotFoundException, FileNotFoundException {
 
-            Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
-            win.dispose();
-            new Setting().setVisible(true);
+        Window win = SwingUtilities.getWindowAncestor((Component) evt.getSource());
+        win.dispose();
+        new Setting().setVisible(true);
 
     }
 

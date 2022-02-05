@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Credential {
 
+    private int id;
     private String email, user_type;
     private File file;
     private Scanner sc;
@@ -33,12 +34,18 @@ public class Credential {
                 }
 
                 //initializing file value to global variable
-                email = data.get(0);
-                user_type = data.get(1);
+                id = Integer.parseInt(data.get(0));
+                email = data.get(1);
+                user_type = data.get(2);
             }
         } else {
             System.out.println("File doesnt exist!");
         }
+    }
+
+    //return user mode
+    public int getId() {
+        return this.id;
     }
 
     //return user email
@@ -61,10 +68,12 @@ public class Credential {
     }
     
     //store user data
-    public void storeData(String email, String mode) throws IOException{
+    public void storeData(int id, String email, String mode) throws IOException{
         FileWriter fw = new FileWriter("Credential.txt");
-        fw.write(email);
+        fw.write(id+"\n");
+        fw.write(email+"\n");
         fw.write(mode);
+        fw.close();
     }
     
     //update the file data
