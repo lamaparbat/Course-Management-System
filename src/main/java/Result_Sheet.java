@@ -42,13 +42,6 @@ public class Result_Sheet extends javax.swing.JFrame {
         search_inp = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        if (new Credential().getMode().equals("Student")) {
-            //auto fill the progress result search keyword
-            search_inp.setText(String.valueOf(new Credential().getId()));
-            search_inp.disable();
-            // auto fill the table row data -> progress report
-            search_inpKeyReleased();
-        }
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -258,12 +251,15 @@ public class Result_Sheet extends javax.swing.JFrame {
 
     // search the report on key presss    
     private void search_inpKeyReleased() throws ClassNotFoundException, SQLException, FileNotFoundException {
-        if (new Credential().getMode().equals("Student") != true) {
-            try {
-                DefaultTableModel model = (DefaultTableModel) report_table.getModel();
-                Object[] row = new Object[5];
-                int id = Integer.parseInt(search_inp.getText());
+        try {
+            DefaultTableModel model = (DefaultTableModel) report_table.getModel();
+            Object[] row = new Object[5];
+            int id = Integer.parseInt(search_inp.getText());
 
+            //reset the table row
+            model.setRowCount(0);
+
+            if (new Credential().getMode() != "Admin" && new Credential().getMode() != "Instructor" && id == new Credential().getId()) {
                 //send keyword to backend
                 ArrayList<Student> student_details = new Student().searchStudent(id);
                 ArrayList<Student> module_result_list = new Student().getProgressReport(id);
@@ -287,15 +283,7 @@ public class Result_Sheet extends javax.swing.JFrame {
                         model.addRow(row);
                     }
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Wrong data type input. Integer expect!");
-            }
-        } else {
-            try {
-                DefaultTableModel model = (DefaultTableModel) report_table.getModel();
-                Object[] row = new Object[5];
-                int id = new Credential().getId();
-
+            } else if(new Credential().getMode().equals("Admin") || new Credential().getMode().equals("Instructor")) {
                 //send keyword to backend
                 ArrayList<Student> student_details = new Student().searchStudent(id);
                 ArrayList<Student> module_result_list = new Student().getProgressReport(id);
@@ -318,13 +306,15 @@ public class Result_Sheet extends javax.swing.JFrame {
                         //append data row to table
                         model.addRow(row);
                     }
-                    
-//                   Refres the table rows                
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Wrong data type input. Integer expect!");
+            }else{
+                System.out.println("access denied");
             }
+
+        } catch (NumberFormatException e) {
+            System.out.println("Wrong data type input. Integer expect!");
         }
+
     }
 
     public static void main(String args[]) {

@@ -28,7 +28,7 @@ public class Setting extends javax.swing.JFrame {
         initComponents();
         setUserProfile();
     }
-          
+
     //parameterized constructor
     private void initComponents() {
 
@@ -113,6 +113,7 @@ public class Setting extends javax.swing.JFrame {
         new_password = new javax.swing.JTextField();
         change_password_btn = new javax.swing.JButton();
         edit_profile_btn = new javax.swing.JButton();
+        create_report = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         jSeparator6 = new javax.swing.JSeparator();
         guidelines_link = new javax.swing.JLabel();
@@ -761,6 +762,24 @@ public class Setting extends javax.swing.JFrame {
             }
         });
 
+        create_report.setFont(new java.awt.Font("Monospaced", 0, 14)); 
+        create_report.setText("Create a student report");
+        
+        //popup the report form 
+        create_report.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                try {
+                    if(new Credential().getMode().equals("Instructor")){
+                        new Result_Form().setVisible(true);
+                    }else{
+                        JOptionPane.showMessageDialog(null,"You are restricted to access this page.", "404 ACCESS DENIED !!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Setting.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
         jLabel12.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         jLabel12.setText("Help & Services");
 
@@ -907,6 +926,7 @@ public class Setting extends javax.swing.JFrame {
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(4, 4, 4)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(create_report)
                                                         .addComponent(jLabel12)
                                                         .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(jLabel3)
@@ -1077,6 +1097,8 @@ public class Setting extends javax.swing.JFrame {
                                                                         .addComponent(jLabel22))))
                                                 .addGap(16, 16, 16)
                                                 .addComponent(change_password_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(24, 24, 24)
+                                                .addComponent(create_report)
                                                 .addGap(24, 24, 24)
                                                 .addComponent(jLabel12)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1274,6 +1296,7 @@ public class Setting extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JButton create_report;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
