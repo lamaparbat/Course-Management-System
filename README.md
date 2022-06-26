@@ -8,9 +8,9 @@
 5. Extract the zip folder
 6. Open xampp server and run all the services like mysql, Apache web server by clicking on start button
 7. Then open the phpmyadmin on the browser by clicking:  http://localhost/phpmyadmin
-8. Then create a new database and name it as ->.    elibrary
+8. Then create a new database and name it as ->.    cms
 9. After succesfully database created, click on the import tab on the top navbar 
-10. Then click on the choose file button and select the elibrary.sql file from the project folder
+10. Then click on the choose file button and select the cms.sql file from the project folder
 11. Then click on the import button
 12. Now Open the project from your favourite text-editor. Mine is Netbeans
 13. Then click on the run button and enjoy the application
