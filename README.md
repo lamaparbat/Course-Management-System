@@ -16,15 +16,5 @@
 13. Then click on the run button and enjoy the application
 
 
-# Troubleshooting
-if you come across on any problem during following this steps, the feel free to ask me. You can mail me at parbatlama70@gmail.com
-
-
-# Suggestion
-I would be happy to welcome your contributions.
-
-
-
-
 # Enjoy learning
 # Happy Coding ✌️✌️
